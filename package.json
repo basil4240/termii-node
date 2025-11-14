@@ -24,7 +24,7 @@
     "format:check": "prettier --check \"src/**/*.ts\" \"tests/**/*.ts\"",
     "typecheck": "tsc --noEmit",
     "example": "ts-node",
-    "example:send-message": "ts-node examples/send-message.ts",
+    "example:messaging": "ts-node examples/messaging.examples.ts",
     "prepublishOnly": "npm run lint && npm run test && npm run build",
     "prepare": "husky install"
   },
