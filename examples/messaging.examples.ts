@@ -1,4 +1,4 @@
-import { TermiiClient, CHANNELS, MESSAGE_TYPES } from '../src';
+import { TermiiClient, CHANNELS, MESSAGE_TYPES, ConsoleLogger } from '../src';
 import {
   apiKey,
   baseUrl,
@@ -11,6 +11,7 @@ import {
 const termii = new TermiiClient({
   baseUrl: baseUrl,
   apiKey: apiKey,
+  logger: new ConsoleLogger()
 });
 
 // ============================================================================

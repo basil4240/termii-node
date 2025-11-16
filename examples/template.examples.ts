@@ -1,10 +1,11 @@
-import { TermiiClient } from '../src';
+import { ConsoleLogger, TermiiClient } from '../src';
 import { apiKey, baseUrl, singlePhoneNumber } from './sample-payload';
 
 // Initialize client
 const termii = new TermiiClient({
   baseUrl: baseUrl,
   apiKey: apiKey,
+  logger: new ConsoleLogger()
 });
 
 // ============================================================================
