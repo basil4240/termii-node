@@ -28,7 +28,7 @@ export type {
   SendMessageResponse,
   SendBulkMessageResponse,
   MediaObject,
-} from './types/messaging.types';
+} from './types';
 
 // Export Sender Id Models
 export type {
@@ -39,13 +39,21 @@ export type {
   FetchSenderIdResponse,
   RequestSenderIdRequest,
   RequestSenderIdResponse
-} from './types/sender-id.types'
+} from './types'
 
 // Export Number Message Models
 export type {
   SendNumberMessageRequest,
   SendNumberMessageResponse
-} from './types/number.types';
+} from './types';
+
+// Export Template Message Models
+export type {
+  TemplateMedia,
+  SendTemplateRequest,
+  SendTemplateWithMediaRequest,
+  SendTemplateResponse
+} from './types';
 
 // Export constants
 export { CHANNELS } from './constants/channels';
@@ -58,3 +66,5 @@ export { SENDER_ID_STATUS } from './constants/sender-id-status';
 export type { SenderIdStatus } from './constants/sender-id-status';
 export { NUMBER_MESSAGE_TYPES } from './constants/number-message-types';
 export type { NumberMessageType } from './constants/number-message-types';
+export { TEMPLATE_MESSAGE_TYPE } from './constants/template-message-types';
+export type { TemplateMessageType } from './constants/template-message-types';

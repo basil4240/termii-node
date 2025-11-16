@@ -27,7 +27,7 @@ Official Node.js SDK for the [Termii API](https://termii.com). Send SMS, verify 
   - [Messaging](#messaging)
   - [Sender ID](#sender-id)
   - [Number](#number)
-  - [Templates](#templates) _(Coming Soon)_
+  - [Templates](#templates)
   - [Phonebooks](#phonebooks) _(Coming Soon)_
 - [Configuration](#configuration)
 - [Error Handling](#error-handling)
@@ -290,7 +290,7 @@ This API allows businesses send messages to customers using Termii's auto-genera
 Send a single message to a phone number:
 
 ```typescript
-const result = await termii.number.send({
+const result = await termii.numberMessage.send({
   to: '2347065250817',
   sms: 'Hello from Termii Number API!',
   type: 'plain',
@@ -312,13 +312,96 @@ console.log(result);
 
 ### Templates
 
-_(Coming Soon)_
+Send pre-approved messaging templates to users via Termii's template engine. Templates allow you to send structured, reusable messages with dynamic variables with or without media attachments.
 
-Create and manage message templates.
+#### Send Template Message
+
+Send a template message without media:
 
 ```typescript
-// This section will be added when template resource is implemented
+const result = await termii.templateMessage.sendTemplate({
+  phone_number: '2347065250817',
+  device_id: 'YOUR_DEVICE_ID',
+  template_id: 'TEMPLATE_ID_123',
+  data: {
+    first_name: 'John',
+    code: '48291',
+  },
+});
+
+console.log(result);
+// {
+//   message_id: "9122821270554876574",
+//   status: "success",
+//   message: "Template message sent",
+//   balance: 9,
+//   user: "your_username"
+// }
 ```
+
+#### Send Template Message With Media
+
+Send a template message with an image, document, video, or other supported media type:
+
+```typescript
+const result = await termii.templateMessage.sendTemplateWithMedia({
+  phone_number: '2347065250817',
+  device_id: 'YOUR_DEVICE_ID',
+  template_id: 'TEMPLATE_ID_123',
+  data: {
+    first_name: 'Jane',
+    order_id: 'ORD-9981',
+  },
+  media: {
+    url: 'https://example.com/invoice.pdf',
+    caption: 'Your order invoice',
+  },
+});
+```
+
+#### Template Data Parameters
+
+Template variables (data) must match the structure defined in your Termii dashboard template.
+
+Example template:
+
+```
+Hello {{first_name}}, your verification code is {{code}}.
+```
+
+Your request must include:
+
+```json
+{
+  "first_name": "John",
+  "code": "48291"
+}
+```
+
+#### Supported Media Types
+
+- **Images**: jpg, jpeg, png
+- **Documents**: pdf, doc, docx
+- **Videos**: mp4, 3gp
+- Others supported based on WhatsApp business media rules
+
+#### When to Use Templates
+
+Templates are ideal for:
+
+- OTP notifications
+- Order confirmations
+- Account alerts
+- Automated customer updates
+- Structured WhatsApp messages
+- Any message requiring parameterized content
+
+#### Termii Template API Requirements
+
+- Templates must be created and approved in the Termii Dashboard
+- `template_id` is assigned by Termii upon approval
+- All dynamic fields must be passed in the `data` object
+- Sending a template without all required fields will cause a validation error
 
 ### Phonebooks
 
@@ -421,12 +504,13 @@ try {
 Check out the [examples](./examples) directory for more usage examples:
 
 - [Messaging](./examples/messaging.examples) - Complete messaging examples
-- [Messaging](./examples/sender-id.examples) - Complete messaging examples
-- [Messaging](./examples/number.examples) - Complete messaging examples
+- [Sender Id](./examples/sender-id.examples) - Complete sender id examples
+- [Number](./examples/number.examples) - Complete number examples
+- [Template](./examples/template.examples) - Complete template examples
 
 ### Running Examples
 
-Before running the examples, make sure you edit sample-payload.example to sample-payload.ts and edit the content to proper data, or just edit each of the example you want to run and add proper data to them 
+Before running the examples, make sure you edit sample-payload.example to sample-payload.ts and edit the content to proper data, or just edit each of the example you want to run and add proper data to them
 
 ```bash
 # Install dependencies
@@ -442,6 +526,7 @@ npx tsx examples/messaging.examples.ts
 npm run example:messaging
 npm run example:sender-id
 npm run example:number
+npm run example:template
 ```
 
 ## API Documentation

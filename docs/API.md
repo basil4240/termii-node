@@ -14,7 +14,9 @@ Complete API reference for the Termii Node.js SDK.
   - [fetch()](#fetch)
 - [Number](#number)
   - [send()](#send)
-- [Templates](#templates) _(Coming Soon)_
+- [Templates](#templates)
+  - [sendTemplate()](#sendTemplate)
+  - [sendTemplateWithMedia()](#sendTemplateWithMedia)
 - [Phonebooks](#phonebooks) _(Coming Soon)_
 - [Types](#types)
 - [Error Handling](#error-handling)
@@ -393,32 +395,34 @@ This API allows businesses send messages to customers using Termii's auto-genera
 Send a message to a phone number.
 
 **Signature:**
+
 ```typescript
-number.send(params: SendNumberMessageRequest): Promise<SendNumberMessageResponse>
+numberMessage.send(params: SendNumberMessageRequest): Promise<SendNumberMessageResponse>
 ```
 
 **Parameters:**
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `to` | `string` | Yes | Recipient phone number in international format (e.g., 2347065250817) |
-| `sms` | `string` | Yes | Message content |
-| `type` | `'plain'` | No | Message type (default `'plain'`) |
+| Name   | Type      | Required | Description                                                          |
+| ------ | --------- | -------- | -------------------------------------------------------------------- |
+| `to`   | `string`  | Yes      | Recipient phone number in international format (e.g., 2347065250817) |
+| `sms`  | `string`  | Yes      | Message content                                                      |
+| `type` | `'plain'` | No       | Message type (default `'plain'`)                                     |
 
 **Returns:** `Promise<SendNumberMessageResponse>`
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `code` | `string` | Response status code |
+| Property     | Type     | Description               |
+| ------------ | -------- | ------------------------- |
+| `code`       | `string` | Response status code      |
 | `message_id` | `string` | Unique message identifier |
-| `message` | `string` | Status message |
-| `balance` | `number` | Remaining account balance |
-| `user` | `string` | Account username |
+| `message`    | `string` | Status message            |
+| `balance`    | `number` | Remaining account balance |
+| `user`       | `string` | Account username          |
 
 **Example:**
+
 ```typescript
 // Single recipient
-const result = await termii.number.send({
+const result = await termii.numberMessage.send({
   to: '2347065250817',
   sms: 'Hello from Termii Number API!',
   type: 'plain',
@@ -426,6 +430,7 @@ const result = await termii.number.send({
 ```
 
 **Throws:**
+
 - `TermiiValidationError` - Invalid input parameters
 - `TermiiAuthenticationError` - Authentication failed
 - `TermiiAPIError` - API error response
@@ -435,11 +440,200 @@ const result = await termii.number.send({
 
 ## Templates
 
-_(Coming Soon)_
-
-Documentation for template management will be added here.
+Send predefined and approved message templates through Termii. Templates allow structured messaging with dynamic variables, ensuring consistency and compliance across customer communications. Templates may also include optional media attachments for richer messaging experiences.
 
 ---
+
+### `sendTemplate()`
+
+Send a template message **without** media.
+
+**Signature:**
+
+```typescript
+templateMessage.sendTemplate(params: SendTemplateRequest): Promise<SendTemplateResponse>
+```
+
+**Parameters:**
+
+| Name           | Type                  | Required | Description                                      |
+| -------------- | --------------------- | -------- | ------------------------------------------------ |
+| `phone_number` | `string`              | Yes      | Recipient's phone number in international format |
+| `device_id`    | `string`              | Yes      | Device ID associated with your Termii account    |
+| `template_id`  | `string`              | Yes      | Template identifier from your Termii dashboard   |
+| `data`         | `Record<string, any>` | Yes      | Dynamic fields required by the template          |
+
+**Returns:** `Promise<SendTemplateResponse>`
+
+| Property     | Type     | Description                      |
+| ------------ | -------- | -------------------------------- |
+| `message_id` | `string` | Unique ID for the sent message   |
+| `status`     | `string` | Message delivery status          |
+| `message`    | `string` | Description of the API result    |
+| `balance`    | `number` | Remaining Termii account balance |
+| `user`       | `string` | Your Termii username             |
+
+**Example:**
+
+```typescript
+const result = await termii.templateMessage.sendTemplate({
+  phone_number: '2347065250817',
+  device_id: 'DEV_001',
+  template_id: 'TMP_2001',
+  data: {
+    first_name: 'John',
+    code: '48291',
+  },
+});
+```
+
+**Throws:**
+
+- `TermiiValidationError` - Missing required fields or invalid phone number
+- `TermiiAuthenticationError` - Invalid API key or unauthorized access
+- `TermiiAPIError` - Termii API returned an error response
+- `TermiiNetworkError` - Network or connectivity issue
+
+---
+
+### `sendTemplateWithMedia()`
+
+Send a template message with media, such as images, videos, or documents.
+
+**Signature:**
+
+```typescript
+templateMessage.sendTemplateWithMedia(params: SendTemplateWithMediaRequest): Promise<SendTemplateResponse>
+```
+
+**Parameters:**
+
+| Name            | Type                  | Required | Description                        |
+| --------------- | --------------------- | -------- | ---------------------------------- |
+| `phone_number`  | `string`              | Yes      | Recipient's phone number           |
+| `device_id`     | `string`              | Yes      | Device ID tied to your account     |
+| `template_id`   | `string`              | Yes      | Approved Termii template ID        |
+| `data`          | `Record<string, any>` | Yes      | Template variable values           |
+| `media`         | `MediaObject`         | Yes      | Media payload (URL + caption)      |
+| `media.url`     | `string`              | Yes      | URL pointing to the media file     |
+| `media.caption` | `string`              | Yes      | Caption that accompanies the media |
+
+**Returns:** `Promise<SendTemplateResponse>`
+
+Same return structure as `sendTemplate()`.
+
+**Supported Media Types:**
+
+| Category  | Types          |
+| --------- | -------------- |
+| Images    | JPG, JPEG, PNG |
+| Documents | PDF, DOC, DOCX |
+| Videos    | MP4, 3GP       |
+
+Media must be hosted on a publicly accessible URL.
+
+**Example:**
+
+```typescript
+const result = await termii.templateMessage.sendTemplateWithMedia({
+  phone_number: '2348098765432',
+  device_id: 'DEV_002',
+  template_id: 'TMP_3002',
+  data: {
+    customer_name: 'Mary',
+    invoice_number: 'INV-9033',
+  },
+  media: {
+    url: 'https://example.com/invoice.pdf',
+    caption: 'Invoice INV-9033',
+  },
+});
+```
+
+**Throws:**
+
+- `TermiiValidationError` - Missing media, invalid template data, or missing required arguments
+- `TermiiAuthenticationError` - API key invalid or unauthorized
+- `TermiiAPIError` - Error response returned from Termii servers
+- `TermiiNetworkError` - Connection issue or timeout
+
+---
+
+### Template Data Requirements
+
+Each template in your Termii dashboard defines required variables. Your request must include all variables in the `data` object.
+
+**Example Template:**
+
+```
+Hello {{first_name}}, your verification code is {{code}}.
+```
+
+**Matching Request Body:**
+
+```json
+{
+  "first_name": "John",
+  "code": "48291"
+}
+```
+
+---
+
+### When to Use Templates
+
+Templates are ideal for:
+
+- OTP / Verification codes
+- Payment confirmations
+- Delivery updates
+- Account activity alerts
+- Automated WhatsApp messages
+- Invoice and document delivery
+- Transaction updates
+
+Templates ensure brand consistency and reduce message composition errors.
+
+---
+
+### Notes
+
+- Templates must be created and approved in the Termii dashboard.
+- Only approved templates can be sent.
+- Dynamic fields are validated by Termii; missing fields will cause an error.
+- Media messages may incur higher routing costs depending on channel support.
+
+---
+
+### Example Use Cases
+
+**Verification Code Message:**
+
+```typescript
+await termii.templateMessage.sendTemplate({
+  phone_number: '2348012345678',
+  device_id: 'DEV_992',
+  template_id: 'VERIFY_101',
+  data: { name: 'Samuel', code: '55221' },
+});
+```
+
+**Invoice Delivery With Media:**
+
+```typescript
+await termii.templateMessage.sendTemplateWithMedia({
+  phone_number: '2348098765432',
+  device_id: 'DEV_992',
+  template_id: 'INV_300',
+  data: { customer_name: 'Mary', invoice_number: 'INV-9033' },
+  media: {
+    url: 'https://example.com/invoice.pdf',
+    caption: 'Your Invoice INV-9033',
+  },
+});
+```
+
+Templates offer a reliable, scalable way to automate structured communication while ensuring message consistency and approval compliance.
 
 ## Phonebooks
 

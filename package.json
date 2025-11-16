@@ -28,7 +28,8 @@
     "example": "npx tsx",
     "example:messaging": "npx tsx examples/messaging.examples.ts",
     "example:sender-id": "npx tsx examples/sender-id.examples.ts",
-    "example:number": "npx tsx examples/number.examples.ts"
+    "example:number": "npx tsx examples/number.examples.ts",
+    "example:template": "npx tsx examples/template.examples.ts"
   },
   "dependencies": {
     "axios": "^1.13.2"
