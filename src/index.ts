@@ -41,6 +41,12 @@ export type {
   RequestSenderIdResponse
 } from './types/sender-id.types'
 
+// Export Number Message Models
+export type {
+  SendNumberMessageRequest,
+  SendNumberMessageResponse
+} from './types/number.types';
+
 // Export constants
 export { CHANNELS } from './constants/channels';
 export type { Channel } from './constants/channels';
@@ -50,3 +56,5 @@ export { MESSAGE_TYPES } from './constants/message-types';
 export type { MessageType } from './constants/message-types';
 export { SENDER_ID_STATUS } from './constants/sender-id-status';
 export type { SenderIdStatus } from './constants/sender-id-status';
+export { NUMBER_MESSAGE_TYPES } from './constants/number-message-types';
+export type { NumberMessageType } from './constants/number-message-types';

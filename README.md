@@ -26,7 +26,7 @@ Official Node.js SDK for the [Termii API](https://termii.com). Send SMS, verify 
 - [Usage](#usage)
   - [Messaging](#messaging)
   - [Sender ID](#sender-id)
-  - [Phone Numbers](#phone-numbers) _(Coming Soon)_
+  - [Number](#number)
   - [Templates](#templates) _(Coming Soon)_
   - [Phonebooks](#phonebooks) _(Coming Soon)_
 - [Configuration](#configuration)
@@ -281,15 +281,34 @@ console.log(result);
 - `active` - Approved and available for use
 - `blocked` - Rejected or blocked by the Termii team
 
-### Phone Numbers
+### Number
 
-_(Coming Soon)_
+This API allows businesses send messages to customers using Termii's auto-generated messaging numbers that adapt to customers location.
 
-Search and verify phone numbers.
+#### Send Message
+
+Send a single message to a phone number:
 
 ```typescript
-// This section will be added when number resource is implemented
+const result = await termii.number.send({
+  to: '2347065250817',
+  sms: 'Hello from Termii Number API!',
+  type: 'plain',
+});
+
+console.log(result);
+// {
+//   code: 'ok',
+//   message_id: '9122821270554876574',
+//   message: 'Successfully Sent',
+//   balance: 9,
+//   user: 'your_username'
+// }
 ```
+
+#### Message Types
+
+- `plain` - Regular text message
 
 ### Templates
 
@@ -402,8 +421,12 @@ try {
 Check out the [examples](./examples) directory for more usage examples:
 
 - [Messaging](./examples/messaging.examples) - Complete messaging examples
+- [Messaging](./examples/sender-id.examples) - Complete messaging examples
+- [Messaging](./examples/number.examples) - Complete messaging examples
 
 ### Running Examples
+
+Before running the examples, make sure you edit sample-payload.example to sample-payload.ts and edit the content to proper data, or just edit each of the example you want to run and add proper data to them 
 
 ```bash
 # Install dependencies
@@ -411,6 +434,14 @@ npm install
 
 # Run an example
 npm run example examples/messaging.examples.ts
+
+# Run an example (Alternative)
+npx tsx examples/messaging.examples.ts
+
+# short and direct
+npm run example:messaging
+npm run example:sender-id
+npm run example:number
 ```
 
 ## API Documentation

@@ -10,7 +10,10 @@ Complete API reference for the Termii Node.js SDK.
   - [sendBulk()](#sendbulk)
   - [sendWithMedia()](#sendwithmedia)
 - [Sender ID](#sender-id) _(Coming Soon)_
-- [Phone Numbers](#phone-numbers) _(Coming Soon)_
+  - [request()](#request)
+  - [fetch()](#fetch)
+- [Number](#number)
+  - [send()](#send)
 - [Templates](#templates) _(Coming Soon)_
 - [Phonebooks](#phonebooks) _(Coming Soon)_
 - [Types](#types)
@@ -381,11 +384,52 @@ console.log(result);
 
 ---
 
-## Phone Numbers
+## Number
 
-_(Coming Soon)_
+This API allows businesses send messages to customers using Termii's auto-generated messaging numbers that adapt to customers location.
 
-Documentation for phone number operations will be added here.
+### `send()`
+
+Send a message to a phone number.
+
+**Signature:**
+```typescript
+number.send(params: SendNumberMessageRequest): Promise<SendNumberMessageResponse>
+```
+
+**Parameters:**
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `to` | `string` | Yes | Recipient phone number in international format (e.g., 2347065250817) |
+| `sms` | `string` | Yes | Message content |
+| `type` | `'plain'` | No | Message type (default `'plain'`) |
+
+**Returns:** `Promise<SendNumberMessageResponse>`
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `code` | `string` | Response status code |
+| `message_id` | `string` | Unique message identifier |
+| `message` | `string` | Status message |
+| `balance` | `number` | Remaining account balance |
+| `user` | `string` | Account username |
+
+**Example:**
+```typescript
+// Single recipient
+const result = await termii.number.send({
+  to: '2347065250817',
+  sms: 'Hello from Termii Number API!',
+  type: 'plain',
+});
+```
+
+**Throws:**
+- `TermiiValidationError` - Invalid input parameters
+- `TermiiAuthenticationError` - Authentication failed
+- `TermiiAPIError` - API error response
+- `TermiiNetworkError` - Network/connection error
 
 ---
 

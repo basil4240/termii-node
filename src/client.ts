@@ -1,9 +1,10 @@
-import { DEFAULT_CONFIG } from "./config";
-import { MessagingResource } from "./resources/messaging.resource";
-import { SenderIdResource } from "./resources/sender-id.resource";
-import { Logger, TermiiConfig } from "./types";
-import { TermiiValidationError } from "./utils/errors";
-import { HTTPClient } from "./utils/http.client";
+import { DEFAULT_CONFIG } from './config';
+import { MessagingResource } from './resources/messaging.resource';
+import { NumberResource } from './resources/number.resource';
+import { SenderIdResource } from './resources/sender-id.resource';
+import { Logger, TermiiConfig } from './types';
+import { TermiiValidationError } from './utils/errors';
+import { HTTPClient } from './utils/http.client';
 
 export class TermiiClient {
   private config: Required<Omit<TermiiConfig, 'logger'>> & { logger?: Logger };
@@ -12,7 +13,8 @@ export class TermiiClient {
 
   // Resources
   public readonly messaging: MessagingResource;
-  public readonly senderId: SenderIdResource
+  public readonly senderId: SenderIdResource;
+  public readonly numberMessage: NumberResource;
 
   constructor(config: TermiiConfig) {
     // Validate API key
@@ -43,7 +45,7 @@ export class TermiiClient {
     // Initialize resources
     this.messaging = this.createMessagingResource();
     this.senderId = this.createSenderIdResource();
-    
+    this.numberMessage = this.createNumberResource();
 
     // Log the initialization
     this.config.logger?.info('Termii client initialized', {
@@ -82,6 +84,13 @@ export class TermiiClient {
     return resource;
   }
 
+  private createNumberResource(): NumberResource {
+    const resource = new NumberResource(this.http, this.config.logger);
+    // Inject apiKey into resource
+    (resource as any).apiKey = this.apiKey;
+    return resource;
+  }
+
   /**
    * Get HTTP client instance (for resources)
    */
@@ -109,5 +118,4 @@ export class TermiiClient {
   shouldValidateInput(): boolean {
     return this.config.validateInput;
   }
-  
 }
