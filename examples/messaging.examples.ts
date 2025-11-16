@@ -118,8 +118,8 @@ async function sendDNDMessage() {
 // Run examples
 (async () => {
   await sendSingleSMS();
-  // await sendToMultiple();
-  // await sendBulkSMS();
-  // await sendWhatsAppMedia();
-  // await sendDNDMessage();
+  await sendToMultiple();
+  await sendBulkSMS();
+  await sendWhatsAppMedia();
+  await sendDNDMessage();
 })();
