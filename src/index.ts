@@ -1,6 +1,6 @@
 import { TermiiClient } from './client';
 export * from './types';
-export * from './utils/errors';
+export * from './utils';
 
 // Export TermiiClient as named export
 export { TermiiClient } from './client';
@@ -8,18 +8,11 @@ export { TermiiClient } from './client';
 // // Export TermiiClient as default export
 export default TermiiClient;
 
-// Export types
-export type { TermiiConfig, Logger, TermiiResponse } from './types/common.types';
+// Export Core Models
+export type { TermiiConfig, Logger, TermiiResponse } from './types';
 
 // Export errors
-export {
-  TermiiError,
-  TermiiAuthenticationError,
-  TermiiValidationError,
-  TermiiRateLimitError,
-  TermiiNetworkError,
-  TermiiAPIError,
-} from './utils/errors';
+export * from './utils';
 
 // Export Messaging Models
 export type {
@@ -56,15 +49,4 @@ export type {
 } from './types';
 
 // Export constants
-export { CHANNELS } from './constants/channels';
-export type { Channel } from './constants/channels';
-export { PIN_TYPES } from './constants/pin-types';
-export type { PinType } from './constants/pin-types';
-export { MESSAGE_TYPES } from './constants/message-types';
-export type { MessageType } from './constants/message-types';
-export { SENDER_ID_STATUS } from './constants/sender-id-status';
-export type { SenderIdStatus } from './constants/sender-id-status';
-export { NUMBER_MESSAGE_TYPES } from './constants/number-message-types';
-export type { NumberMessageType } from './constants/number-message-types';
-export { TEMPLATE_MESSAGE_TYPE } from './constants/template-message-types';
-export type { TemplateMessageType } from './constants/template-message-types';
+export * from './constants'

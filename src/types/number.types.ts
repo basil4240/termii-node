@@ -1,4 +1,4 @@
-import { NumberMessageType } from "../constants/number-message-types";
+import { NumberMessageType } from "../constants";
 
 export interface SendNumberMessageRequest {
   /** Destination phone number in international format (e.g., 2347065250817) */

@@ -1,4 +1,4 @@
-import { TermiiValidationError } from './errors';
+import { TermiiValidationError } from "./errors";
 
 export class Validator {
   /**

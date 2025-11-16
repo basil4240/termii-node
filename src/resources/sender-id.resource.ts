@@ -1,11 +1,11 @@
-import { SENDER_ID_STATUS, SenderIdStatus } from '../constants/sender-id-status';
+import { SENDER_ID_STATUS, SenderIdStatus } from '../constants';
 import {
   FetchSenderIdResponse,
   RequestSenderIdRequest,
   RequestSenderIdResponse,
-} from '../types/sender-id.types';
-import { TermiiValidationError } from '../utils/errors';
-import { Validator } from '../utils/validator';
+} from '../types';
+import { TermiiValidationError } from '../utils';
+import { Validator } from '../utils';
 import { BaseResource } from './base.resource';
 
 export class SenderIdResource extends BaseResource {

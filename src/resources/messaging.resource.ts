@@ -1,14 +1,14 @@
-import { TermiiValidationError } from '../utils/errors';
-import { MESSAGE_TYPES } from '../constants/message-types';
+import { TermiiValidationError } from '../utils';
+import { MESSAGE_TYPES } from '../constants';
 import {
   SendBulkMessageRequest,
   SendBulkMessageResponse,
   SendMessageRequest,
   SendMessageResponse,
-} from '../types/messaging.types';
+} from '../types';
 import { BaseResource } from './base.resource';
-import { CHANNELS } from '../constants/channels';
-import { Validator } from '../utils/validator';
+import { CHANNELS } from '../constants';
+import { Validator } from '../utils';
 
 export class MessagingResource extends BaseResource {
   private readonly SEND_ENDPOINT = '/api/sms/send';

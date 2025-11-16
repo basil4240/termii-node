@@ -1,5 +1,4 @@
-import { MessageType } from '../constants/message-types';
-import type { Channel } from '../constants/channels';
+import { Channel, MessageType } from "../constants";
 
 export interface MediaObject {
   /** URL to the media file */

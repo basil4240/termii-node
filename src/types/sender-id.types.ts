@@ -1,4 +1,4 @@
-import { SenderIdStatus } from '../constants/sender-id-status';
+import { SenderIdStatus } from "../constants";
 
 /** Pagination sort info */
 export interface PageableSort {

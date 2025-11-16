@@ -2,9 +2,9 @@ import {
   SendTemplateRequest,
   SendTemplateResponse,
   SendTemplateWithMediaRequest,
-} from '../types/template.types';
-import { TermiiValidationError } from '../utils/errors';
-import { Validator } from '../utils/validator';
+} from '../types';
+import { TermiiValidationError } from '../utils';
+import { Validator } from '../utils';
 import { BaseResource } from './base.resource';
 
 export class TemplateResource extends BaseResource {

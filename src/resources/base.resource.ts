@@ -1,5 +1,5 @@
-import type { HTTPClient } from '../utils/http.client';
-import type { Logger } from '../types/common.types';
+import { Logger } from "../types";
+import { HTTPClient } from "../utils";
 
 export abstract class BaseResource {
   protected http: HTTPClient;

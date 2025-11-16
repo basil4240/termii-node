@@ -1,11 +1,11 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
-import type { HTTPRequestConfig, HTTPResponse, Logger } from '../types/common.types';
 import {
   TermiiNetworkError,
   TermiiAuthenticationError,
   TermiiRateLimitError,
   TermiiAPIError,
 } from './errors';
+import { HTTPRequestConfig, HTTPResponse, Logger } from '../types';
 
 export class HTTPClient {
   private client: AxiosInstance;

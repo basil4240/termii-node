@@ -1,7 +1,7 @@
-import { NUMBER_MESSAGE_TYPES } from "../constants/number-message-types";
-import { SendNumberMessageRequest, SendNumberMessageResponse } from "../types/number.types";
-import { TermiiValidationError } from "../utils/errors";
-import { Validator } from "../utils/validator";
+import { NUMBER_MESSAGE_TYPES } from "../constants";
+import { SendNumberMessageRequest, SendNumberMessageResponse } from "../types";
+import { TermiiValidationError } from "../utils";
+import { Validator } from "../utils";
 import { BaseResource } from "./base.resource";
 
 export class NumberResource extends BaseResource {
