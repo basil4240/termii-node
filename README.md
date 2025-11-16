@@ -25,10 +25,10 @@ Official Node.js SDK for the [Termii API](https://termii.com). Send SMS, verify 
 - [Authentication](#authentication)
 - [Usage](#usage)
   - [Messaging](#messaging)
-  - [Sender ID](#sender-id) *(Coming Soon)*
-  - [Phone Numbers](#phone-numbers) *(Coming Soon)*
-  - [Templates](#templates) *(Coming Soon)*
-  - [Phonebooks](#phonebooks) *(Coming Soon)*
+  - [Sender ID](#sender-id)
+  - [Phone Numbers](#phone-numbers) _(Coming Soon)_
+  - [Templates](#templates) _(Coming Soon)_
+  - [Phonebooks](#phonebooks) _(Coming Soon)_
 - [Configuration](#configuration)
 - [Error Handling](#error-handling)
 - [Examples](#examples)
@@ -37,16 +37,19 @@ Official Node.js SDK for the [Termii API](https://termii.com). Send SMS, verify 
 - [License](#license)
 
 ## Installation
+
 ```bash
 npm install termii-node
 ```
 
 or
+
 ```bash
 yarn add termii-node
 ```
 
 ## Quick Start
+
 ```typescript
 import { TermiiClient } from 'termii-node';
 
@@ -65,7 +68,7 @@ async function sendMessage() {
       type: 'plain',
       channel: 'generic',
     });
-    
+
     console.log('Message sent:', result.message_id);
   } catch (error) {
     console.error('Error:', error.message);
@@ -80,6 +83,7 @@ sendMessage();
 Get your API key from your [Termii Dashboard](https://accounts.termii.com/#/login).
 
 ### Using API Key Directly
+
 ```typescript
 const termii = new TermiiClient({
   apiKey: 'your-api-key-here',
@@ -87,6 +91,7 @@ const termii = new TermiiClient({
 ```
 
 ### Using Environment Variables
+
 ```typescript
 // Set environment variable
 // TERMII_API_KEY=your-api-key-here
@@ -95,6 +100,7 @@ const termii = TermiiClient.fromEnv();
 ```
 
 **.env file:**
+
 ```env
 TERMII_API_KEY=your-api-key-here
 TERMII_BASE_URL=https://api.ng.termii.com  # Optional
@@ -107,6 +113,7 @@ TERMII_BASE_URL=https://api.ng.termii.com  # Optional
 Send SMS messages to single or multiple recipients.
 
 #### Send Single Message
+
 ```typescript
 const result = await termii.messaging.send({
   to: '2347065250817',
@@ -130,6 +137,7 @@ console.log(result);
 #### Send to Multiple Recipients
 
 Send the same message to up to 100 recipients:
+
 ```typescript
 const result = await termii.messaging.send({
   to: ['2347065250817', '2348012345678', '2349087654321'],
@@ -143,6 +151,7 @@ const result = await termii.messaging.send({
 #### Send Bulk Messages
 
 Send messages to up to 10,000 recipients:
+
 ```typescript
 const recipients = [
   '2347065250817',
@@ -162,6 +171,7 @@ const result = await termii.messaging.sendBulk({
 #### Send Media Messages (WhatsApp)
 
 Send images, videos, or documents via WhatsApp:
+
 ```typescript
 const result = await termii.messaging.sendWithMedia({
   to: '2347065250817',
@@ -188,36 +198,115 @@ const result = await termii.messaging.sendWithMedia({
 
 ### Sender ID
 
-*(Coming Soon)*
+Manage and request Sender IDs for branding your outbound SMS messages.
 
-Manage your sender IDs for SMS campaigns.
+#### Request Sender ID
+
+Create a new Sender ID request for approval:
+
 ```typescript
-// This section will be added when sender ID resource is implemented
+const result = await termii.senderId.request({
+  sender_id: 'MyBrand',
+  usecase: 'Customer notifications and alerts',
+  company: 'My Company Ltd',
+});
+
+console.log(result);
+// {
+//   code: 'ok',
+//   message: 'Sender ID request submitted successfully'
+// }
 ```
+
+#### Fetch Sender IDs
+
+Fetch paginated Sender IDs associated with your account (supports page, size and status filters):
+
+```typescript
+const result = await termii.senderId.fetch({
+  page: 0,
+  size: 20,
+  status: SENDER_ID_STATUS.PENDING,
+});
+
+console.log(result);
+// {
+//   content: [
+//     {
+//       sender_id: 'MyBrand',
+//       status: 'pending',
+//       createdAt: '2024-01-12T10:20:30Z',
+//       country: 'NG',
+//       company: 'My Company Ltd',
+//       usecase: 'Customer notifications and alerts'
+//     }
+//   ],
+//   totalElements: 1,
+//   number: 0,
+//   size: 20,
+//   totalPages: 1,
+//   first: true,
+//   last: true
+// }
+```
+
+#### Fetch Sender IDs by Status
+
+Filter Sender IDs by status (`pending`, `active`, `blocked`):
+
+```typescript
+const result = await termii.senderId.fetch({
+  status: SENDER_ID_STATUS.ACTIVE,
+});
+
+console.log(result);
+// {
+//   content: [
+//     {
+//       sender_id: 'MyBrand',
+//       status: 'active',
+//       createdAt: '2024-01-12T10:20:30Z',
+//       country: 'NG'
+//     }
+//   ],
+//   totalElements: 1,
+//   number: 0,
+//   size: 20
+// }
+```
+
+#### Sender ID Status Values
+
+- `pending` - Awaiting approval
+- `active` - Approved and available for use
+- `blocked` - Rejected or blocked by the Termii team
 
 ### Phone Numbers
 
-*(Coming Soon)*
+_(Coming Soon)_
 
 Search and verify phone numbers.
+
 ```typescript
 // This section will be added when number resource is implemented
 ```
 
 ### Templates
 
-*(Coming Soon)*
+_(Coming Soon)_
 
 Create and manage message templates.
+
 ```typescript
 // This section will be added when template resource is implemented
 ```
 
 ### Phonebooks
 
-*(Coming Soon)*
+_(Coming Soon)_
 
 Organize contacts into phonebooks for easy bulk messaging.
+
 ```typescript
 // This section will be added when phonebook resource is implemented
 ```
@@ -225,14 +314,16 @@ Organize contacts into phonebooks for easy bulk messaging.
 ## Configuration
 
 Customize the SDK behavior with configuration options:
+
 ```typescript
 const termii = new TermiiClient({
   apiKey: 'your-api-key',
-  baseUrl: 'https://api.ng.termii.com',  // Optional: Custom API endpoint
-  timeout: 30000,                         // Optional: Request timeout in ms (default: 30000)
-  retries: 3,                             // Optional: Number of retries (default: 3)
-  validateInput: true,                    // Optional: Validate inputs before API calls (default: true)
-  logger: {                               // Optional: Custom logger
+  baseUrl: 'https://api.ng.termii.com', // Optional: Custom API endpoint
+  timeout: 30000, // Optional: Request timeout in ms (default: 30000)
+  retries: 3, // Optional: Number of retries (default: 3)
+  validateInput: true, // Optional: Validate inputs before API calls (default: true)
+  logger: {
+    // Optional: Custom logger
     debug: (message, meta) => console.debug(message, meta),
     info: (message, meta) => console.info(message, meta),
     warn: (message, meta) => console.warn(message, meta),
@@ -243,18 +334,19 @@ const termii = new TermiiClient({
 
 ### Configuration Options
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `apiKey` | `string` | **Required** | Your Termii API key |
-| `baseUrl` | `string` | `https://api.ng.termii.com` | API base URL |
-| `timeout` | `number` | `30000` | Request timeout in milliseconds |
-| `retries` | `number` | `3` | Number of automatic retries for failed requests |
-| `validateInput` | `boolean` | `true` | Validate inputs before making API calls |
-| `logger` | `Logger` | `undefined` | Custom logger instance |
+| Option          | Type      | Default                     | Description                                     |
+| --------------- | --------- | --------------------------- | ----------------------------------------------- |
+| `apiKey`        | `string`  | **Required**                | Your Termii API key                             |
+| `baseUrl`       | `string`  | `https://api.ng.termii.com` | API base URL                                    |
+| `timeout`       | `number`  | `30000`                     | Request timeout in milliseconds                 |
+| `retries`       | `number`  | `3`                         | Number of automatic retries for failed requests |
+| `validateInput` | `boolean` | `true`                      | Validate inputs before making API calls         |
+| `logger`        | `Logger`  | `undefined`                 | Custom logger instance                          |
 
 ## Error Handling
 
 The SDK provides specific error classes for different scenarios:
+
 ```typescript
 import {
   TermiiValidationError,
@@ -297,31 +389,28 @@ try {
 
 ### Error Types
 
-| Error Class | Description | HTTP Status |
-|-------------|-------------|-------------|
-| `TermiiValidationError` | Invalid input parameters | N/A |
-| `TermiiAuthenticationError` | Authentication failed | 401, 403 |
-| `TermiiRateLimitError` | Too many requests | 429 |
-| `TermiiAPIError` | General API error | 400, 422, 500+ |
-| `TermiiNetworkError` | Network/connection error | N/A |
+| Error Class                 | Description              | HTTP Status    |
+| --------------------------- | ------------------------ | -------------- |
+| `TermiiValidationError`     | Invalid input parameters | N/A            |
+| `TermiiAuthenticationError` | Authentication failed    | 401, 403       |
+| `TermiiRateLimitError`      | Too many requests        | 429            |
+| `TermiiAPIError`            | General API error        | 400, 422, 500+ |
+| `TermiiNetworkError`        | Network/connection error | N/A            |
 
 ## Examples
 
 Check out the [examples](./examples) directory for more usage examples:
 
-- [Basic Usage](./examples/basic-usage.ts) - Simple message sending
-- [Send Message](./examples/send-message.ts) - Complete messaging examples
-- [Error Handling](./examples/error-handling.ts) - Comprehensive error handling
-- [Bulk Messaging](./examples/bulk-messaging.ts) - Sending to many recipients
-- [WhatsApp Media](./examples/whatsapp-media.ts) - Sending media via WhatsApp
+- [Messaging](./examples/messaging.examples) - Complete messaging examples
 
 ### Running Examples
+
 ```bash
 # Install dependencies
 npm install
 
 # Run an example
-npm run example examples/send-message.ts
+npm run example examples/messaging.examples.ts
 ```
 
 ## API Documentation
@@ -331,6 +420,7 @@ For detailed API documentation, see [API.md](./docs/API.md).
 ## TypeScript Support
 
 This SDK is written in TypeScript and includes type definitions. You get full IntelliSense support in VS Code and other TypeScript-aware editors.
+
 ```typescript
 import { TermiiClient, SendMessageRequest, SendMessageResponse } from 'termii-node';
 
@@ -355,6 +445,7 @@ const result: SendMessageResponse = await termii.messaging.send(params);
 - TypeScript >= 5.0 (if using TypeScript)
 
 ## Testing
+
 ```bash
 # Run all tests
 npm test

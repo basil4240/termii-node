@@ -12,21 +12,18 @@ export class HTTPClient {
   private retries: number;
   private logger?: Logger;
 
-  constructor(
-    baseURL: string,
-    timeout: number = 30000,
-    retries: number = 3,
-    logger?: Logger
-  ) {
+  constructor(baseURL: string, timeout: number = 30000, retries: number = 3, logger?: Logger) {
     this.retries = retries;
     this.logger = logger;
 
     this.client = axios.create({
       baseURL,
       timeout,
+      decompress: true,
       headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
+        // 'Content-Type': 'application/json',
+        // 'Accept': 'application/json',
+        'Accept-Encoding': 'gzip, deflate',
       },
     });
 
@@ -69,10 +66,9 @@ export class HTTPClient {
     if (!error.response) {
       // Network error (no response received)
       this.logger?.error('Network error', error.message);
-      throw new TermiiNetworkError(
-        error.message || 'Network request failed',
-        { originalError: error }
-      );
+      throw new TermiiNetworkError(error.message || 'Network request failed', {
+        originalError: error,
+      });
     }
 
     const { status, data } = error.response;
@@ -85,24 +81,20 @@ export class HTTPClient {
       case 401:
       case 403:
         throw new TermiiAuthenticationError(errorMessage, data);
-      
+
       case 429:
         throw new TermiiRateLimitError(errorMessage, data);
-      
+
       case 400:
       case 422:
         throw new TermiiAPIError(errorMessage, status, data);
-      
+
       case 500:
       case 502:
       case 503:
       case 504:
-        throw new TermiiAPIError(
-          'Server error occurred. Please try again later.',
-          status,
-          data
-        );
-      
+        throw new TermiiAPIError('Server error occurred. Please try again later.', status, data);
+
       default:
         throw new TermiiAPIError(errorMessage, status, data);
     }
@@ -133,8 +125,10 @@ export class HTTPClient {
 
       if (shouldRetry) {
         const delay = this.calculateBackoff(attempt);
-        this.logger?.warn(`Retrying request (attempt ${attempt + 1}/${this.retries}) after ${delay}ms`);
-        
+        this.logger?.warn(
+          `Retrying request (attempt ${attempt + 1}/${this.retries}) after ${delay}ms`
+        );
+
         await this.sleep(delay);
         return this.retryRequest<T>(config, attempt + 1);
       }

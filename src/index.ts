@@ -30,6 +30,17 @@ export type {
   MediaObject,
 } from './types/messaging.types';
 
+// Export Sender Id Models
+export type {
+  PageableSort,
+  Pageable,
+  SortInfo,
+  SenderIdEntry,
+  FetchSenderIdResponse,
+  RequestSenderIdRequest,
+  RequestSenderIdResponse
+} from './types/sender-id.types'
+
 // Export constants
 export { CHANNELS } from './constants/channels';
 export type { Channel } from './constants/channels';
@@ -37,3 +48,5 @@ export { PIN_TYPES } from './constants/pin-types';
 export type { PinType } from './constants/pin-types';
 export { MESSAGE_TYPES } from './constants/message-types';
 export type { MessageType } from './constants/message-types';
+export { SENDER_ID_STATUS } from './constants/sender-id-status';
+export type { SenderIdStatus } from './constants/sender-id-status';

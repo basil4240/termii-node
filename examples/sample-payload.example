@@ -1,0 +1,6 @@
+// Setup sample payload
+export const singlePhoneNumber = '2349087654321';
+export const multiplePhoneNumber = ['2347065250817', '2348012345678', '2349087654321'];
+export const senderId = 'Company';
+export const baseUrl = 'https://v3.api.termii.com';
+export const apiKey = 'api_key';

@@ -1,18 +1,20 @@
 import { TermiiClient, CHANNELS, MESSAGE_TYPES } from '../src';
+import {
+  apiKey,
+  baseUrl,
+  multiplePhoneNumber,
+  senderId,
+  singlePhoneNumber,
+} from './sample-payload';
 
-// Initialize client form .env
+// Initialize client
 const termii = new TermiiClient({
-  baseUrl: 'https://v3.api.termii.com',
-  apiKey: 'TLruVXZ1biIKbZI2Ml28XQbjRn5pnc6WbVBDxllfHT0Drrzct8Ns83bd5X2ZDE',
+  baseUrl: baseUrl,
+  apiKey: apiKey,
 });
 
-// Setup sample payload
-const singlePhoneNumber = '2348075789935';
-// const multiplePhoneNumber = ['2347065250817', '2348012345678', '2349087654321'];
-const senderId = 'Sportboo';
-
 // ============================================================================
-// Example 1: Send single SMS (Promise pattern)
+// Example 1: Send single SMS
 // ============================================================================
 async function sendSingleSMS() {
   try {
@@ -33,84 +35,84 @@ async function sendSingleSMS() {
 }
 
 // ============================================================================
-// Example 3: Send to multiple recipients (up to 100)
+// Example 2: Send to multiple recipients (up to 100)
 // ============================================================================
-// async function sendToMultiple() {
-//   try {
-//     const result = await termii.messaging.send({
-//       to: multiplePhoneNumber,
-//       from: senderId,
-//       sms: 'Bulk message to selected recipients',
-//       type: MESSAGE_TYPES.PLAIN,
-//       channel: CHANNELS.GENERIC,
-//     });
+async function sendToMultiple() {
+  try {
+    const result = await termii.messaging.send({
+      to: multiplePhoneNumber,
+      from: senderId,
+      sms: 'Bulk message to selected recipients',
+      type: MESSAGE_TYPES.PLAIN,
+      channel: CHANNELS.GENERIC,
+    });
 
-//     console.log('Message sent to multiple recipients:', result);
-//   } catch (error) {
-//     console.error('Error:', error);
-//   }
-// }
-
-// ============================================================================
-// Example 4: Send bulk SMS (up to 10,000 recipients)
-// ============================================================================
-// async function sendBulkSMS() {
-//   try {
-//     const result = await termii.messaging.sendBulk({
-//       to: multiplePhoneNumber,
-//       from: senderId,
-//       sms: 'This is a bulk message to all recipients',
-//       type: MESSAGE_TYPES.PLAIN,
-//       channel: CHANNELS.GENERIC,
-//     });
-
-//     console.log('Bulk message sent:', result);
-//     console.log('Response code:', result.code);
-//   } catch (error) {
-//     console.error('Error sending bulk message:', error);
-//   }
-// }
+    console.log('Message sent to multiple recipients:', result);
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
 
 // ============================================================================
-// Example 6: Send WhatsApp message with media
+// Example 3: Send bulk SMS (up to 10,000 recipients)
 // ============================================================================
-// async function sendWhatsAppMedia() {
-//   try {
-//     const result = await termii.messaging.sendWithMedia({
-//       to: singlePhoneNumber,
-//       from: senderId,
-//       type: MESSAGE_TYPES.PLAIN,
-//       channel: CHANNELS.WHATSAPP,
-//       media: {
-//         url: 'https://example.com/images/product.jpg',
-//         caption: 'Check out our new product!',
-//       },
-//     });
+async function sendBulkSMS() {
+  try {
+    const result = await termii.messaging.sendBulk({
+      to: multiplePhoneNumber,
+      from: senderId,
+      sms: 'This is a bulk message to all recipients',
+      type: MESSAGE_TYPES.PLAIN,
+      channel: CHANNELS.GENERIC,
+    });
 
-//     console.log('WhatsApp media message sent:', result);
-//   } catch (error) {
-//     console.error('Error sending WhatsApp media:', error);
-//   }
-// }
+    console.log('Bulk message sent:', result);
+    console.log('Response code:', result.code);
+  } catch (error) {
+    console.error('Error sending bulk message:', error);
+  }
+}
 
 // ============================================================================
-// Example 7: Send DND message (for Nigerian numbers with DND enabled)
+// Example 4: Send WhatsApp message with media
 // ============================================================================
-// async function sendDNDMessage() {
-//   try {
-//     const result = await termii.messaging.send({
-//       to: singlePhoneNumber,
-//       from: senderId,
-//       sms: 'Important message delivered via DND route',
-//       type: MESSAGE_TYPES.PLAIN,
-//       channel: CHANNELS.DND,
-//     });
+async function sendWhatsAppMedia() {
+  try {
+    const result = await termii.messaging.sendWithMedia({
+      to: singlePhoneNumber,
+      from: senderId,
+      type: MESSAGE_TYPES.PLAIN,
+      channel: CHANNELS.WHATSAPP,
+      media: {
+        url: 'https://example.com/images/product.jpg',
+        caption: 'Check out our new product!',
+      },
+    });
 
-//     console.log('DND message sent:', result);
-//   } catch (error) {
-//     console.error('Error:', error);
-//   }
-// }
+    console.log('WhatsApp media message sent:', result);
+  } catch (error) {
+    console.error('Error sending WhatsApp media:', error);
+  }
+}
+
+// ============================================================================
+// Example 5: Send DND message (for Nigerian numbers with DND enabled)
+// ============================================================================
+async function sendDNDMessage() {
+  try {
+    const result = await termii.messaging.send({
+      to: singlePhoneNumber,
+      from: senderId,
+      sms: 'Important message delivered via DND route',
+      type: MESSAGE_TYPES.PLAIN,
+      channel: CHANNELS.DND,
+    });
+
+    console.log('DND message sent:', result);
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
 
 // Run examples
 (async () => {

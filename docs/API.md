@@ -9,10 +9,10 @@ Complete API reference for the Termii Node.js SDK.
   - [send()](#send)
   - [sendBulk()](#sendbulk)
   - [sendWithMedia()](#sendwithmedia)
-- [Sender ID](#sender-id) *(Coming Soon)*
-- [Phone Numbers](#phone-numbers) *(Coming Soon)*
-- [Templates](#templates) *(Coming Soon)*
-- [Phonebooks](#phonebooks) *(Coming Soon)*
+- [Sender ID](#sender-id) _(Coming Soon)_
+- [Phone Numbers](#phone-numbers) _(Coming Soon)_
+- [Templates](#templates) _(Coming Soon)_
+- [Phonebooks](#phonebooks) _(Coming Soon)_
 - [Types](#types)
 - [Error Handling](#error-handling)
 
@@ -26,17 +26,18 @@ Creates a new Termii client instance.
 
 **Parameters:**
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `config` | `TermiiConfig` | Yes | Configuration object |
-| `config.apiKey` | `string` | Yes | Your Termii API key |
-| `config.baseUrl` | `string` | No | API base URL (default: `https://api.ng.termii.com`) |
-| `config.timeout` | `number` | No | Request timeout in ms (default: `30000`) |
-| `config.retries` | `number` | No | Number of retries (default: `3`) |
-| `config.validateInput` | `boolean` | No | Enable input validation (default: `true`) |
-| `config.logger` | `Logger` | No | Custom logger instance |
+| Name                   | Type           | Required | Description                                         |
+| ---------------------- | -------------- | -------- | --------------------------------------------------- |
+| `config`               | `TermiiConfig` | Yes      | Configuration object                                |
+| `config.apiKey`        | `string`       | Yes      | Your Termii API key                                 |
+| `config.baseUrl`       | `string`       | No       | API base URL (default: `https://api.ng.termii.com`) |
+| `config.timeout`       | `number`       | No       | Request timeout in ms (default: `30000`)            |
+| `config.retries`       | `number`       | No       | Number of retries (default: `3`)                    |
+| `config.validateInput` | `boolean`      | No       | Enable input validation (default: `true`)           |
+| `config.logger`        | `Logger`       | No       | Custom logger instance                              |
 
 **Example:**
+
 ```typescript
 import { TermiiClient } from 'termii-node';
 
@@ -52,10 +53,12 @@ const termii = new TermiiClient({
 Creates a client from environment variables.
 
 **Environment Variables:**
+
 - `TERMII_API_KEY` (required)
 - `TERMII_BASE_URL` (optional)
 
 **Example:**
+
 ```typescript
 const termii = TermiiClient.fromEnv();
 ```
@@ -71,31 +74,33 @@ Send SMS messages to single or multiple recipients.
 Send an SMS message to a single recipient or multiple recipients (up to 100).
 
 **Signature:**
+
 ```typescript
 messaging.send(params: SendMessageRequest): Promise<SendMessageResponse>
 ```
 
 **Parameters:**
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `to` | `string \| string[]` | Yes | Recipient phone number(s) in international format |
-| `from` | `string` | Yes | Sender ID (alphanumeric, max 11 characters) |
-| `sms` | `string` | Yes | Message content |
-| `type` | `'plain' \| 'unicode'` | Yes | Message type |
-| `channel` | `'generic' \| 'dnd' \| 'whatsapp'` | Yes | Delivery channel |
-| `media` | `MediaObject` | No | Media attachment (WhatsApp only) |
+| Name      | Type                               | Required | Description                                       |
+| --------- | ---------------------------------- | -------- | ------------------------------------------------- |
+| `to`      | `string \| string[]`               | Yes      | Recipient phone number(s) in international format |
+| `from`    | `string`                           | Yes      | Sender ID (alphanumeric, max 11 characters)       |
+| `sms`     | `string`                           | Yes      | Message content                                   |
+| `type`    | `'plain' \| 'unicode'`             | Yes      | Message type                                      |
+| `channel` | `'generic' \| 'dnd' \| 'whatsapp'` | Yes      | Delivery channel                                  |
+| `media`   | `MediaObject`                      | No       | Media attachment (WhatsApp only)                  |
 
 **Returns:** `Promise<SendMessageResponse>`
 
-| Property | Type | Description |
-|----------|------|-------------|
+| Property     | Type     | Description               |
+| ------------ | -------- | ------------------------- |
 | `message_id` | `string` | Unique message identifier |
-| `message` | `string` | Status message |
-| `balance` | `number` | Remaining account balance |
-| `user` | `string` | Account username |
+| `message`    | `string` | Status message            |
+| `balance`    | `number` | Remaining account balance |
+| `user`       | `string` | Account username          |
 
 **Example:**
+
 ```typescript
 // Single recipient
 const result = await termii.messaging.send({
@@ -117,6 +122,7 @@ const result = await termii.messaging.send({
 ```
 
 **Throws:**
+
 - `TermiiValidationError` - Invalid input parameters
 - `TermiiAuthenticationError` - Authentication failed
 - `TermiiAPIError` - API error response
@@ -129,30 +135,32 @@ const result = await termii.messaging.send({
 Send SMS messages to multiple recipients (up to 10,000).
 
 **Signature:**
+
 ```typescript
 messaging.sendBulk(params: SendBulkMessageRequest): Promise<SendBulkMessageResponse>
 ```
 
 **Parameters:**
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `to` | `string[]` | Yes | Array of recipient phone numbers (max 10,000) |
-| `from` | `string` | Yes | Sender ID (alphanumeric, max 11 characters) |
-| `sms` | `string` | Yes | Message content |
-| `type` | `'plain' \| 'unicode'` | Yes | Message type |
-| `channel` | `'generic' \| 'dnd' \| 'whatsapp'` | Yes | Delivery channel |
+| Name      | Type                               | Required | Description                                   |
+| --------- | ---------------------------------- | -------- | --------------------------------------------- |
+| `to`      | `string[]`                         | Yes      | Array of recipient phone numbers (max 10,000) |
+| `from`    | `string`                           | Yes      | Sender ID (alphanumeric, max 11 characters)   |
+| `sms`     | `string`                           | Yes      | Message content                               |
+| `type`    | `'plain' \| 'unicode'`             | Yes      | Message type                                  |
+| `channel` | `'generic' \| 'dnd' \| 'whatsapp'` | Yes      | Delivery channel                              |
 
 **Returns:** `Promise<SendBulkMessageResponse>`
 
-| Property | Type | Description |
-|----------|------|-------------|
+| Property     | Type     | Description               |
+| ------------ | -------- | ------------------------- |
 | `message_id` | `string` | Unique message identifier |
-| `message` | `string` | Status message |
-| `balance` | `number` | Remaining account balance |
-| `user` | `string` | Account username |
+| `message`    | `string` | Status message            |
+| `balance`    | `number` | Remaining account balance |
+| `user`       | `string` | Account username          |
 
 **Example:**
+
 ```typescript
 const recipients = [
   '2347065250817',
@@ -171,6 +179,7 @@ const result = await termii.messaging.sendBulk({
 ```
 
 **Throws:**
+
 - `TermiiValidationError` - Invalid input or too many recipients
 - `TermiiAuthenticationError` - Authentication failed
 - `TermiiAPIError` - API error response
@@ -183,30 +192,33 @@ const result = await termii.messaging.sendBulk({
 Send a message with media attachment via WhatsApp.
 
 **Signature:**
+
 ```typescript
 messaging.sendWithMedia(params: SendWithMediaRequest): Promise<SendMessageResponse>
 ```
 
 **Parameters:**
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `to` | `string` | Yes | Recipient phone number |
-| `from` | `string` | Yes | Sender ID |
-| `type` | `'plain'` | Yes | Message type (must be 'plain') |
-| `channel` | `'whatsapp'` | Yes | Must be 'whatsapp' |
-| `media` | `MediaObject` | Yes | Media attachment |
-| `media.url` | `string` | Yes | Public URL of the media file |
-| `media.caption` | `string` | No | Optional caption for the media |
+| Name            | Type          | Required | Description                    |
+| --------------- | ------------- | -------- | ------------------------------ |
+| `to`            | `string`      | Yes      | Recipient phone number         |
+| `from`          | `string`      | Yes      | Sender ID                      |
+| `type`          | `'plain'`     | Yes      | Message type (must be 'plain') |
+| `channel`       | `'whatsapp'`  | Yes      | Must be 'whatsapp'             |
+| `media`         | `MediaObject` | Yes      | Media attachment               |
+| `media.url`     | `string`      | Yes      | Public URL of the media file   |
+| `media.caption` | `string`      | No       | Optional caption for the media |
 
 **Returns:** `Promise<SendMessageResponse>`
 
 **Supported Media Types:**
+
 - Images: JPG, PNG, GIF
 - Videos: MP4, 3GP
 - Documents: PDF, DOC, DOCX, XLS, XLSX
 
 **Example:**
+
 ```typescript
 // Send image with caption
 const result = await termii.messaging.sendWithMedia({
@@ -234,6 +246,7 @@ const result = await termii.messaging.sendWithMedia({
 ```
 
 **Throws:**
+
 - `TermiiValidationError` - Invalid channel or missing media URL
 - `TermiiAuthenticationError` - Authentication failed
 - `TermiiAPIError` - API error response
@@ -243,15 +256,134 @@ const result = await termii.messaging.sendWithMedia({
 
 ## Sender ID
 
-*(Coming Soon)*
+Manage and request Sender IDs for branding your outbound SMS messages.
 
-Documentation for sender ID management will be added here.
+### `request()`
+
+Request a new Sender ID for approval.
+
+**Signature:**
+
+```typescript
+senderId.request(params: RequestSenderIdRequest): Promise<RequestSenderIdResponse>
+```
+
+**Parameters:**
+
+| Name        | Type     | Required | Description                                                          |
+| ----------- | -------- | -------- | -------------------------------------------------------------------- |
+| `sender_id` | `string` | Yes      | The sender ID you want to register (alphanumeric, max 11 characters) |
+| `usecase`   | `string` | Yes      | Brief description of how the sender ID will be used                  |
+| `company`   | `string` | Yes      | Company or organization name                                         |
+
+**Returns:** `Promise<RequestSenderIdResponse>`
+
+| Property  | Type     | Description          |
+| --------- | -------- | -------------------- |
+| `code`    | `string` | Response status code |
+| `message` | `string` | Response message     |
+
+**Example:**
+
+```typescript
+const result = await termii.senderId.request({
+  sender_id: 'MyBrand',
+  usecase: 'Customer notifications and alerts',
+  company: 'My Company Ltd',
+});
+
+console.log(result);
+// {
+//   code: 'ok',
+//   message: 'Sender ID request submitted successfully'
+// }
+```
+
+**Throws:**
+
+- `TermiiValidationError` - Invalid input parameters
+- `TermiiAuthenticationError` - Authentication failed
+- `TermiiAPIError` - API error response
+- `TermiiNetworkError` - Network/connection error
+
+---
+
+### `fetch()`
+
+Fetch a paginated list of Sender IDs associated with your account.
+
+**Signature:**
+
+```typescript
+senderId.fetch(params?: {
+  page?: number;
+  size?: number;
+  status?: SenderIdStatus;
+}): Promise<FetchSenderIdResponse>
+```
+
+**Parameters:**
+
+| Name     | Type             | Required | Description                                       |
+| -------- | ---------------- | -------- | ------------------------------------------------- |
+| `page`   | `number`         | No       | Page number for pagination (default 0)            |
+| `size`   | `number`         | No       | Number of items per page (default 20)             |
+| `status` | `SenderIdStatus` | No       | Filter by status (`pending`, `active`, `blocked`) |
+
+**Returns:** `Promise<FetchSenderIdResponse>`
+
+| Property        | Type              | Description                |
+| --------------- | ----------------- | -------------------------- |
+| `content`       | `SenderIdEntry[]` | List of sender ID entries  |
+| `totalElements` | `number`          | Total number of sender IDs |
+| `number`        | `number`          | Current page number        |
+| `size`          | `number`          | Page size                  |
+| `totalPages`    | `number`          | Total number of pages      |
+| `first`         | `boolean`         | True if first page         |
+| `last`          | `boolean`         | True if last page          |
+
+**Example:**
+
+```typescript
+// Fetch all sender IDs (first page, 20 per page)
+const result = await termii.senderId.fetch({
+  page: 0,
+  size: 20,
+});
+
+console.log(result);
+// {
+//   content: [
+//     {
+//       sender_id: 'MyBrand',
+//       status: 'pending',
+//       createdAt: '2024-01-12T10:20:30Z',
+//       country: 'NG',
+//       company: 'My Company Ltd',
+//       usecase: 'Customer notifications and alerts'
+//     }
+//   ],
+//   totalElements: 1,
+//   number: 0,
+//   size: 20,
+//   totalPages: 1,
+//   first: true,
+//   last: true
+// }
+```
+
+**Throws:**
+
+- `TermiiValidationError` - Invalid input parameters
+- `TermiiAuthenticationError` - Authentication failed
+- `TermiiAPIError` - API error response
+- `TermiiNetworkError` - Network/connection error
 
 ---
 
 ## Phone Numbers
 
-*(Coming Soon)*
+_(Coming Soon)_
 
 Documentation for phone number operations will be added here.
 
@@ -259,7 +391,7 @@ Documentation for phone number operations will be added here.
 
 ## Templates
 
-*(Coming Soon)*
+_(Coming Soon)_
 
 Documentation for template management will be added here.
 
@@ -267,7 +399,7 @@ Documentation for template management will be added here.
 
 ## Phonebooks
 
-*(Coming Soon)*
+_(Coming Soon)_
 
 Documentation for phonebook operations will be added here.
 
@@ -276,6 +408,7 @@ Documentation for phonebook operations will be added here.
 ## Types
 
 ### Core Types
+
 ```typescript
 interface TermiiConfig {
   apiKey: string;
@@ -295,6 +428,7 @@ interface Logger {
 ```
 
 ### Messaging Types
+
 ```typescript
 interface SendMessageRequest {
   to: string | string[];
@@ -344,9 +478,12 @@ All errors extend from the base `TermiiError` class.
 #### `TermiiValidationError`
 
 Thrown when input validation fails.
+
 ```typescript
 try {
-  await termii.messaging.send({ /* invalid params */ });
+  await termii.messaging.send({
+    /* invalid params */
+  });
 } catch (error) {
   if (error instanceof TermiiValidationError) {
     console.error('Validation failed:', error.message);
@@ -357,6 +494,7 @@ try {
 #### `TermiiAuthenticationError`
 
 Thrown for authentication failures (HTTP 401, 403).
+
 ```typescript
 try {
   await termii.messaging.send(params);
@@ -370,6 +508,7 @@ try {
 #### `TermiiRateLimitError`
 
 Thrown when rate limit is exceeded (HTTP 429).
+
 ```typescript
 try {
   await termii.messaging.send(params);
@@ -383,6 +522,7 @@ try {
 #### `TermiiAPIError`
 
 Thrown for API errors (HTTP 4xx, 5xx).
+
 ```typescript
 try {
   await termii.messaging.send(params);
@@ -398,6 +538,7 @@ try {
 #### `TermiiNetworkError`
 
 Thrown for network/connection errors.
+
 ```typescript
 try {
   await termii.messaging.send(params);

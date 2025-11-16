@@ -1,5 +1,6 @@
 import { DEFAULT_CONFIG } from "./config";
 import { MessagingResource } from "./resources/messaging.resource";
+import { SenderIdResource } from "./resources/sender-id.resource";
 import { Logger, TermiiConfig } from "./types";
 import { TermiiValidationError } from "./utils/errors";
 import { HTTPClient } from "./utils/http.client";
@@ -11,6 +12,7 @@ export class TermiiClient {
 
   // Resources
   public readonly messaging: MessagingResource;
+  public readonly senderId: SenderIdResource
 
   constructor(config: TermiiConfig) {
     // Validate API key
@@ -40,6 +42,7 @@ export class TermiiClient {
 
     // Initialize resources
     this.messaging = this.createMessagingResource();
+    this.senderId = this.createSenderIdResource();
     
 
     // Log the initialization
@@ -67,6 +70,13 @@ export class TermiiClient {
 
   private createMessagingResource(): MessagingResource {
     const resource = new MessagingResource(this.http, this.config.logger);
+    // Inject apiKey into resource
+    (resource as any).apiKey = this.apiKey;
+    return resource;
+  }
+
+  private createSenderIdResource(): SenderIdResource {
+    const resource = new SenderIdResource(this.http, this.config.logger);
     // Inject apiKey into resource
     (resource as any).apiKey = this.apiKey;
     return resource;
