@@ -1,28 +1,5 @@
 import { SenderIdStatus } from "../constants";
-
-/** Pagination sort info */
-export interface PageableSort {
-  empty: boolean;
-  sorted: boolean;
-  unsorted: boolean;
-}
-
-/** Pagination wrapper */
-export interface Pageable {
-  sort: PageableSort;
-  offset: number;
-  pageNumber: number;
-  pageSize: number;
-  paged: boolean;
-  unpaged: boolean;
-}
-
-/** Sort info (top-level) */
-export interface SortInfo {
-  empty: boolean;
-  sorted: boolean;
-  unsorted: boolean;
-}
+import { Pageable, SortInfo } from "./common.types";
 
 /** A Sender ID entry (in fetch list) */
 export interface SenderIdEntry {

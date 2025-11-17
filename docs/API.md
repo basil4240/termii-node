@@ -9,7 +9,7 @@ Complete API reference for the Termii Node.js SDK.
   - [send()](#send)
   - [sendBulk()](#sendbulk)
   - [sendWithMedia()](#sendwithmedia)
-- [Sender ID](#sender-id) _(Coming Soon)_
+- [Sender ID](#sender-id)
   - [request()](#request)
   - [fetch()](#fetch)
 - [Number](#number)
@@ -17,7 +17,7 @@ Complete API reference for the Termii Node.js SDK.
 - [Templates](#templates)
   - [sendTemplate()](#sendTemplate)
   - [sendTemplateWithMedia()](#sendTemplateWithMedia)
-- [Phonebooks](#phonebooks) _(Coming Soon)_
+- [Phonebooks](#phonebook)
 - [Types](#types)
 - [Error Handling](#error-handling)
 
@@ -635,11 +635,172 @@ await termii.templateMessage.sendTemplateWithMedia({
 
 Templates offer a reliable, scalable way to automate structured communication while ensuring message consistency and approval compliance.
 
-## Phonebooks
+## Phonebook
 
-_(Coming Soon)_
+Manage and organize customer groups for messaging and segmentation. The Phonebook API lets you **create**, **list**, **update**, and **delete** phonebooks on your Termii account.
 
-Documentation for phonebook operations will be added here.
+---
+
+### `fetchAll()`
+
+Retrieve all phonebooks created on your Termii account.
+
+**Signature:**
+```typescript
+phonebook.fetchAll(): Promise<FetchPhonebooksResponse>
+```
+
+**Returns:** `Promise<FetchPhonebooksResponse>`
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `content` | `PhonebookEntry[]` | List of phonebooks |
+| `pageable` | `Pageable` | Pagination metadata |
+| `totalPages` | `number` | Total pages |
+| `totalElements` | `number` | Total number of phonebooks |
+| `size` | `number` | Page size |
+| `number` | `number` | Current page index |
+| `empty` | `boolean` | Indicates if page contains no data |
+
+**Example:**
+```typescript
+const phonebooks = await termii.phonebook.fetchAll();
+// phonebooks.content[0] = {
+//   id: "c3d32e8b-22f2-4dfb-af45-84a1cb8916fb",
+//   name: "Customers",
+//   total_number_of_contacts: 420,
+//   date_created: "2023-08-10T12:45:00Z"
+// }
+```
+
+**Throws:**
+- `TermiiAuthenticationError` - Authentication failed
+- `TermiiAPIError` - API error response
+- `TermiiNetworkError` - Network/connection error
+
+---
+
+### `create()`
+
+Create a new phonebook for storing contacts.
+
+**Signature:**
+```typescript
+phonebook.create(params: CreatePhonebookRequest): Promise<CreatePhonebookResponse>
+```
+
+**Parameters:**
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `phonebook_name` | `string` | Yes | Name of the phonebook |
+| `description` | `string` | No | Optional phonebook description |
+
+**Returns:** `Promise<CreatePhonebookResponse>`
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `message` | `string` | Status message |
+| `status` | `string` | Operation result |
+
+**Example:**
+```typescript
+const result = await termii.phonebook.create({
+  phonebook_name: "VIP Customers",
+  description: "High-value customers",
+});
+// {
+//   message: "Phonebook created successfully",
+//   status: "success"
+// }
+```
+
+**Throws:**
+- `TermiiValidationError` - Missing required fields
+- `TermiiAuthenticationError` - Authentication failed
+- `TermiiAPIError` - API error response
+
+---
+
+### `update()`
+
+Update an existing phonebook's name or description.
+
+**Signature:**
+```typescript
+phonebook.update(id: string, params: UpdatePhonebookRequest): Promise<UpdatePhonebookResponse>
+```
+
+**Parameters:**
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `phonebook_name` | `string` | Yes | Updated phonebook name |
+| `description` | `string` | Yes | Updated description |
+
+**Returns:** `Promise<UpdatePhonebookResponse>`
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `id` | `string` | Phonebook ID |
+| `name` | `string` | Updated name |
+| `description` | `string` | Updated description |
+| `numberOfContacts` | `number` | Count of contacts |
+| `temp` | `boolean` | Indicates temporary phonebook |
+| `createdAt` | `string` | Timestamp |
+| `updatedAt` | `string` | Timestamp |
+
+**Example:**
+```typescript
+const updated = await termii.phonebook.update("pb_123", {
+  phonebook_name: "Engaged Leads",
+  description: "Contacts who frequently interact",
+});
+```
+
+**Throws:**
+- `TermiiValidationError` - Invalid input parameters
+- `TermiiAuthenticationError` - Authentication failed
+- `TermiiAPIError` - API error response
+
+---
+
+### `delete()`
+
+Delete a phonebook by ID.
+
+**Signature:**
+```typescript
+phonebook.delete(id: string): Promise<DeletePhonebookResponse>
+```
+
+**Returns:** `Promise<DeletePhonebookResponse>`
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `message` | `string` | Status confirming deletion |
+
+**Example:**
+```typescript
+await termii.phonebook.delete("pb_12345");
+// {
+//   message: "Phonebook deleted successfully"
+// }
+```
+
+**Throws:**
+- `TermiiAuthenticationError` - Authentication failed
+- `TermiiAPIError` - API error response
+
+---
+
+### Notes and Behavior
+
+- Termii phonebooks help you segment users for targeted communication.
+- Fetch endpoint returns full pagination metadata.
+- Deleting a phonebook does not delete the contacts themselves unless removed separately.
+- Phonebook IDs are UUIDs.
+- Creating or updating a phonebook requires minimal fields, making it easily automatable.
 
 ---
 

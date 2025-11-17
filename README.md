@@ -28,7 +28,7 @@ Official Node.js SDK for the [Termii API](https://termii.com). Send SMS, verify 
   - [Sender ID](#sender-id)
   - [Number](#number)
   - [Templates](#templates)
-  - [Phonebooks](#phonebooks) _(Coming Soon)_
+  - [Phonebooks](#phonebooks)
 - [Configuration](#configuration)
 - [Error Handling](#error-handling)
 - [Examples](#examples)
@@ -403,14 +403,70 @@ Templates are ideal for:
 - All dynamic fields must be passed in the `data` object
 - Sending a template without all required fields will cause a validation error
 
-### Phonebooks
+### Phonebook
 
-_(Coming Soon)_
+Manage contact groups used for messaging, segmentation, and campaign targeting. The Phonebook API allows you to create, update, fetch, and delete phonebooks.
 
-Organize contacts into phonebooks for easy bulk messaging.
+#### Fetch All Phonebooks
 
+Retrieve all existing phonebooks on your Termii account:
 ```typescript
-// This section will be added when phonebook resource is implemented
+const result = await termii.phonebook.fetchAll();
+
+console.log(result);
+// {
+//   page: 1,
+//   total_pages: 1,
+//   phonebooks: [
+//     {
+//       phonebook_id: "pb_12345",
+//       phonebook_name: "Customers",
+//       description: "All active customers",
+//       contacts: 1200
+//     }
+//   ]
+// }
+```
+
+#### Create Phonebook
+
+Create a new phonebook for storing and grouping contacts:
+```typescript
+const result = await termii.phonebook.create({
+  phonebook_name: "VIP Customers",
+  description: "High value customers",
+});
+
+console.log(result);
+// {
+//   phonebook_id: "pb_83920",
+//   message: "Phonebook created successfully"
+// }
+```
+
+#### Update Phonebook
+
+Modify the name or description of an existing phonebook:
+```typescript
+const result = await termii.phonebook.update("pb_83920", {
+  phonebook_name: "VIP Clients",
+  description: "Premium clients with high transaction value",
+});
+
+console.log(result);
+// {
+//   phonebook_id: "pb_83920",
+//   message: "Phonebook updated successfully"
+// }
+```
+
+#### Delete Phonebook
+
+Remove a phonebook permanently from your Termii account:
+```typescript
+await termii.phonebook.delete("pb_83920");
+// No content returned.
+// Phonebook removed successfully.
 ```
 
 ## Configuration
@@ -527,6 +583,7 @@ npm run example:messaging
 npm run example:sender-id
 npm run example:number
 npm run example:template
+npm run example:phonebook
 ```
 
 ## API Documentation

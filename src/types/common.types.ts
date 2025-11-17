@@ -1,19 +1,19 @@
 export interface TermiiConfig {
   /** Your Termii API key (required) */
   apiKey: string;
-  
+
   /** Base URL for API requests (optional, defaults to https://api.ng.termii.com) */
   baseUrl?: string;
-  
+
   /** Request timeout in milliseconds (default: 30000) */
   timeout?: number;
-  
+
   /** Number of retry attempts for failed requests (default: 3) */
   retries?: number;
-  
+
   /** Enable input validation before API calls (default: true) */
   validateInput?: boolean;
-  
+
   /** Custom logger instance */
   logger?: Logger;
 }
@@ -49,4 +49,28 @@ export interface HTTPResponse<T = any> {
   status: number;
   statusText: string;
   headers: Record<string, string>;
+}
+
+/** Pagination sort info */
+export interface PageableSort {
+  empty: boolean;
+  sorted: boolean;
+  unsorted: boolean;
+}
+
+/** Pagination wrapper */
+export interface Pageable {
+  sort: PageableSort;
+  offset: number;
+  pageNumber: number;
+  pageSize: number;
+  paged: boolean;
+  unpaged: boolean;
+}
+
+/** Sort info (top-level) */
+export interface SortInfo {
+  empty: boolean;
+  sorted: boolean;
+  unsorted: boolean;
 }

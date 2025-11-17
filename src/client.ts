@@ -1,4 +1,5 @@
 import { DEFAULT_CONFIG } from './config';
+import { PhonebookResource } from './resources';
 import { MessagingResource } from './resources/messaging.resource';
 import { NumberResource } from './resources/number.resource';
 import { SenderIdResource } from './resources/sender-id.resource';
@@ -17,6 +18,7 @@ export class TermiiClient {
   public readonly senderId: SenderIdResource;
   public readonly numberMessage: NumberResource;
   public readonly templateMessage: TemplateResource;
+  public readonly phonebook: PhonebookResource;
 
   constructor(config: TermiiConfig) {
     // Validate API key
@@ -49,6 +51,7 @@ export class TermiiClient {
     this.senderId = this.createSenderIdResource();
     this.numberMessage = this.createNumberResource();
     this.templateMessage = this.createTemplateResource();
+    this.phonebook = this.createPhonebookResource();
 
     // Log the initialization
     this.config.logger?.info('Termii client initialized', {
@@ -96,6 +99,13 @@ export class TermiiClient {
 
   private createTemplateResource(): TemplateResource {
     const resource = new TemplateResource(this.http, this.config.logger);
+    // Inject apiKey into resource
+    (resource as any).apiKey = this.apiKey;
+    return resource;
+  }
+
+  private createPhonebookResource(): PhonebookResource {
+    const resource = new PhonebookResource(this.http, this.config.logger);
     // Inject apiKey into resource
     (resource as any).apiKey = this.apiKey;
     return resource;
