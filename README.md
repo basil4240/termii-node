@@ -1,9 +1,10 @@
 # Termii Node.js SDK
 
-[![npm version](https://badge.fury.io/js/%40yourcompany%2Ftermii-sdk.svg)](https://badge.fury.io/js/%40yourcompany%2Ftermii-sdk)
+[![npm version](https://badge.fury.io/js/%40basil4240%2Ftermii-node.svg)](https://badge.fury.io/js/%40basil4240%2Ftermii-node)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
-[![Tests](https://github.com/yourcompany/termii-sdk/workflows/CI/badge.svg)](https://github.com/yourcompany/termii-sdk/actions)
+
+
 
 Official Node.js SDK for the [Termii API](https://termii.com). Send SMS, verify phone numbers, and manage messaging at scale with a simple, type-safe interface.
 
