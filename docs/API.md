@@ -17,7 +17,16 @@ Complete API reference for the Termii Node.js SDK.
 - [Templates](#templates)
   - [sendTemplate()](#sendTemplate)
   - [sendTemplateWithMedia()](#sendTemplateWithMedia)
-- [Phonebooks](#phonebook)
+- [Phonebook](#phonebook)
+  - [fetchAll()](#fetchAll)
+  - [create()](#create)
+  - [update()](#update)
+  - [delete()](#delete)
+- [Contacts](#contacts) _(Coming Soon)_
+- [Campaign](#campaign) _(Coming Soon)_
+- [Token](#token) _(Coming Soon)_
+- [Insights](#insight) _(Coming Soon)_
+- [Conversations](#conversation) _(Coming Soon)_
 - [Types](#types)
 - [Error Handling](#error-handling)
 
@@ -646,23 +655,25 @@ Manage and organize customer groups for messaging and segmentation. The Phoneboo
 Retrieve all phonebooks created on your Termii account.
 
 **Signature:**
+
 ```typescript
 phonebook.fetchAll(): Promise<FetchPhonebooksResponse>
 ```
 
 **Returns:** `Promise<FetchPhonebooksResponse>`
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `content` | `PhonebookEntry[]` | List of phonebooks |
-| `pageable` | `Pageable` | Pagination metadata |
-| `totalPages` | `number` | Total pages |
-| `totalElements` | `number` | Total number of phonebooks |
-| `size` | `number` | Page size |
-| `number` | `number` | Current page index |
-| `empty` | `boolean` | Indicates if page contains no data |
+| Property        | Type               | Description                        |
+| --------------- | ------------------ | ---------------------------------- |
+| `content`       | `PhonebookEntry[]` | List of phonebooks                 |
+| `pageable`      | `Pageable`         | Pagination metadata                |
+| `totalPages`    | `number`           | Total pages                        |
+| `totalElements` | `number`           | Total number of phonebooks         |
+| `size`          | `number`           | Page size                          |
+| `number`        | `number`           | Current page index                 |
+| `empty`         | `boolean`          | Indicates if page contains no data |
 
 **Example:**
+
 ```typescript
 const phonebooks = await termii.phonebook.fetchAll();
 // phonebooks.content[0] = {
@@ -674,6 +685,7 @@ const phonebooks = await termii.phonebook.fetchAll();
 ```
 
 **Throws:**
+
 - `TermiiAuthenticationError` - Authentication failed
 - `TermiiAPIError` - API error response
 - `TermiiNetworkError` - Network/connection error
@@ -685,29 +697,31 @@ const phonebooks = await termii.phonebook.fetchAll();
 Create a new phonebook for storing contacts.
 
 **Signature:**
+
 ```typescript
 phonebook.create(params: CreatePhonebookRequest): Promise<CreatePhonebookResponse>
 ```
 
 **Parameters:**
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `phonebook_name` | `string` | Yes | Name of the phonebook |
-| `description` | `string` | No | Optional phonebook description |
+| Name             | Type     | Required | Description                    |
+| ---------------- | -------- | -------- | ------------------------------ |
+| `phonebook_name` | `string` | Yes      | Name of the phonebook          |
+| `description`    | `string` | No       | Optional phonebook description |
 
 **Returns:** `Promise<CreatePhonebookResponse>`
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `message` | `string` | Status message |
-| `status` | `string` | Operation result |
+| Property  | Type     | Description      |
+| --------- | -------- | ---------------- |
+| `message` | `string` | Status message   |
+| `status`  | `string` | Operation result |
 
 **Example:**
+
 ```typescript
 const result = await termii.phonebook.create({
-  phonebook_name: "VIP Customers",
-  description: "High-value customers",
+  phonebook_name: 'VIP Customers',
+  description: 'High-value customers',
 });
 // {
 //   message: "Phonebook created successfully",
@@ -716,6 +730,7 @@ const result = await termii.phonebook.create({
 ```
 
 **Throws:**
+
 - `TermiiValidationError` - Missing required fields
 - `TermiiAuthenticationError` - Authentication failed
 - `TermiiAPIError` - API error response
@@ -727,38 +742,41 @@ const result = await termii.phonebook.create({
 Update an existing phonebook's name or description.
 
 **Signature:**
+
 ```typescript
 phonebook.update(id: string, params: UpdatePhonebookRequest): Promise<UpdatePhonebookResponse>
 ```
 
 **Parameters:**
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `phonebook_name` | `string` | Yes | Updated phonebook name |
-| `description` | `string` | Yes | Updated description |
+| Name             | Type     | Required | Description            |
+| ---------------- | -------- | -------- | ---------------------- |
+| `phonebook_name` | `string` | Yes      | Updated phonebook name |
+| `description`    | `string` | Yes      | Updated description    |
 
 **Returns:** `Promise<UpdatePhonebookResponse>`
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `id` | `string` | Phonebook ID |
-| `name` | `string` | Updated name |
-| `description` | `string` | Updated description |
-| `numberOfContacts` | `number` | Count of contacts |
-| `temp` | `boolean` | Indicates temporary phonebook |
-| `createdAt` | `string` | Timestamp |
-| `updatedAt` | `string` | Timestamp |
+| Property           | Type      | Description                   |
+| ------------------ | --------- | ----------------------------- |
+| `id`               | `string`  | Phonebook ID                  |
+| `name`             | `string`  | Updated name                  |
+| `description`      | `string`  | Updated description           |
+| `numberOfContacts` | `number`  | Count of contacts             |
+| `temp`             | `boolean` | Indicates temporary phonebook |
+| `createdAt`        | `string`  | Timestamp                     |
+| `updatedAt`        | `string`  | Timestamp                     |
 
 **Example:**
+
 ```typescript
-const updated = await termii.phonebook.update("pb_123", {
-  phonebook_name: "Engaged Leads",
-  description: "Contacts who frequently interact",
+const updated = await termii.phonebook.update('pb_123', {
+  phonebook_name: 'Engaged Leads',
+  description: 'Contacts who frequently interact',
 });
 ```
 
 **Throws:**
+
 - `TermiiValidationError` - Invalid input parameters
 - `TermiiAuthenticationError` - Authentication failed
 - `TermiiAPIError` - API error response
@@ -770,25 +788,28 @@ const updated = await termii.phonebook.update("pb_123", {
 Delete a phonebook by ID.
 
 **Signature:**
+
 ```typescript
 phonebook.delete(id: string): Promise<DeletePhonebookResponse>
 ```
 
 **Returns:** `Promise<DeletePhonebookResponse>`
 
-| Property | Type | Description |
-|----------|------|-------------|
+| Property  | Type     | Description                |
+| --------- | -------- | -------------------------- |
 | `message` | `string` | Status confirming deletion |
 
 **Example:**
+
 ```typescript
-await termii.phonebook.delete("pb_12345");
+await termii.phonebook.delete('pb_12345');
 // {
 //   message: "Phonebook deleted successfully"
 // }
 ```
 
 **Throws:**
+
 - `TermiiAuthenticationError` - Authentication failed
 - `TermiiAPIError` - API error response
 

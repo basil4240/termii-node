@@ -28,7 +28,12 @@ Official Node.js SDK for the [Termii API](https://termii.com). Send SMS, verify 
   - [Sender ID](#sender-id)
   - [Number](#number)
   - [Templates](#templates)
-  - [Phonebooks](#phonebooks)
+  - [Phonebooks](#phonebook)
+  - [Contacts](#contacts) _(Coming Soon)_
+  - [Campaign](#campaign) _(Coming Soon)_
+  - [Token](#token) _(Coming Soon)_
+  - [Insights](#insight) _(Coming Soon)_
+  - [Conversations](#conversation) _(Coming Soon)_
 - [Configuration](#configuration)
 - [Error Handling](#error-handling)
 - [Examples](#examples)
