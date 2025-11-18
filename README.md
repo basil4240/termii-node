@@ -6,7 +6,7 @@
 
 
 
-Official Node.js SDK for the [Termii API](https://termii.com). Send SMS, verify phone numbers, and manage messaging at scale with a simple, type-safe interface.
+Node.js SDK for the [Termii API](https://termii.com). Send SMS, verify phone numbers, and manage messaging at scale with a simple, type-safe interface.
 
 ## Features
 
