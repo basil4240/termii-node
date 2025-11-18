@@ -1,5 +1,13 @@
-import { ConsoleLogger, TermiiClient } from '../src';
-import { apiKey, baseUrl, singlePhoneNumber } from './sample-payload';
+import {
+  ConsoleLogger,
+  TermiiAPIError,
+  TermiiAuthenticationError,
+  TermiiClient,
+  TermiiNetworkError,
+  TermiiRateLimitError,
+  TermiiValidationError,
+} from '../src';
+import { apiKey, baseUrl } from './sample-payload';
 
 // Initialize client
 const termii = new TermiiClient({
@@ -15,9 +23,28 @@ async function fetchAllPhonebook() {
   try {
     const result = await termii.phonebook.fetchAll();
 
-    console.log('Phonebook Fetch:', result);
+    console.log('Phonebook Fetched:', result);
   } catch (error) {
-    console.error('Error Fetching phonebook', error);
+    console.error('Error Fetching phonebook');
+    if (error instanceof TermiiValidationError) {
+      // Invalid input parameters
+      console.error('Validation error:', error.message);
+    } else if (error instanceof TermiiAuthenticationError) {
+      // Invalid API key or unauthorized
+      console.error('Authentication error:', error.message);
+    } else if (error instanceof TermiiRateLimitError) {
+      // Rate limit exceeded
+      console.error('Rate limit exceeded:', error.message);
+    } else if (error instanceof TermiiAPIError) {
+      // API error (4xx, 5xx)
+      console.error('API error:', error.message, error.statusCode);
+    } else if (error instanceof TermiiNetworkError) {
+      // Network/connection error
+      console.error('Network error:', error.message);
+    } else {
+      // Unknown error
+      console.error('Unexpected error:', error);
+    }
   }
 }
 
@@ -33,7 +60,26 @@ async function createPhonebook() {
 
     console.log('Phonebook Created:', result);
   } catch (error) {
-    console.error('Error Creating Phonebook', error);
+    console.error('Error Creating Phonebook');
+    if (error instanceof TermiiValidationError) {
+      // Invalid input parameters
+      console.error('Validation error:', error.message);
+    } else if (error instanceof TermiiAuthenticationError) {
+      // Invalid API key or unauthorized
+      console.error('Authentication error:', error.message);
+    } else if (error instanceof TermiiRateLimitError) {
+      // Rate limit exceeded
+      console.error('Rate limit exceeded:', error.message);
+    } else if (error instanceof TermiiAPIError) {
+      // API error (4xx, 5xx)
+      console.error('API error:', error.message, error.statusCode);
+    } else if (error instanceof TermiiNetworkError) {
+      // Network/connection error
+      console.error('Network error:', error.message);
+    } else {
+      // Unknown error
+      console.error('Unexpected error:', error);
+    }
   }
 }
 
@@ -49,7 +95,26 @@ async function updatePhonebook() {
 
     console.log('Phonebook Updated:', result);
   } catch (error) {
-    console.error('Error Updating Phonebook', error);
+    console.error('Error Updating Phonebook');
+    if (error instanceof TermiiValidationError) {
+      // Invalid input parameters
+      console.error('Validation error:', error.message);
+    } else if (error instanceof TermiiAuthenticationError) {
+      // Invalid API key or unauthorized
+      console.error('Authentication error:', error.message);
+    } else if (error instanceof TermiiRateLimitError) {
+      // Rate limit exceeded
+      console.error('Rate limit exceeded:', error.message);
+    } else if (error instanceof TermiiAPIError) {
+      // API error (4xx, 5xx)
+      console.error('API error:', error.message, error.statusCode);
+    } else if (error instanceof TermiiNetworkError) {
+      // Network/connection error
+      console.error('Network error:', error.message);
+    } else {
+      // Unknown error
+      console.error('Unexpected error:', error);
+    }
   }
 }
 
@@ -62,14 +127,33 @@ async function deletePhonebook() {
 
     console.log('Phonebook Deleted:', result);
   } catch (error) {
-    console.error('Error Deleting Phonebook', error);
+    console.error('Error Deleting Phonebook');
+    if (error instanceof TermiiValidationError) {
+      // Invalid input parameters
+      console.error('Validation error:', error.message);
+    } else if (error instanceof TermiiAuthenticationError) {
+      // Invalid API key or unauthorized
+      console.error('Authentication error:', error.message);
+    } else if (error instanceof TermiiRateLimitError) {
+      // Rate limit exceeded
+      console.error('Rate limit exceeded:', error.message);
+    } else if (error instanceof TermiiAPIError) {
+      // API error (4xx, 5xx)
+      console.error('API error:', error.message, error.statusCode);
+    } else if (error instanceof TermiiNetworkError) {
+      // Network/connection error
+      console.error('Network error:', error.message);
+    } else {
+      // Unknown error
+      console.error('Unexpected error:', error);
+    }
   }
 }
 
 // Run examples
 (async () => {
   await fetchAllPhonebook();
-  // await createPhonebook();
-  // await updatePhonebook();
-  // await deletePhonebook();
+  await createPhonebook();
+  await updatePhonebook();
+  await deletePhonebook();
 })();

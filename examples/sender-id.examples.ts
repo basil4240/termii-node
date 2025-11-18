@@ -1,11 +1,19 @@
-import { ConsoleLogger, TermiiClient } from '../src';
+import {
+  ConsoleLogger,
+  TermiiAPIError,
+  TermiiAuthenticationError,
+  TermiiClient,
+  TermiiNetworkError,
+  TermiiRateLimitError,
+  TermiiValidationError,
+} from '../src';
 import { apiKey, baseUrl } from './sample-payload';
 
 // Initialize client
 const termii = new TermiiClient({
   baseUrl: baseUrl,
   apiKey: apiKey,
-  logger: new ConsoleLogger()
+  logger: new ConsoleLogger(),
 });
 
 // ============================================================================
@@ -17,7 +25,26 @@ async function fetchSenderIds() {
 
     console.log('Sender Id Fetched:', result);
   } catch (error) {
-    console.error('Error Fetching Sender Id', error);
+    console.error('Error Fetching Sender Id');
+    if (error instanceof TermiiValidationError) {
+      // Invalid input parameters
+      console.error('Validation error:', error.message);
+    } else if (error instanceof TermiiAuthenticationError) {
+      // Invalid API key or unauthorized
+      console.error('Authentication error:', error.message);
+    } else if (error instanceof TermiiRateLimitError) {
+      // Rate limit exceeded
+      console.error('Rate limit exceeded:', error.message);
+    } else if (error instanceof TermiiAPIError) {
+      // API error (4xx, 5xx)
+      console.error('API error:', error.message, error.statusCode);
+    } else if (error instanceof TermiiNetworkError) {
+      // Network/connection error
+      console.error('Network error:', error.message);
+    } else {
+      // Unknown error
+      console.error('Unexpected error:', error);
+    }
   }
 }
 
@@ -34,7 +61,26 @@ async function registerSenderId() {
 
     console.log('Sender Id Request successful:', result);
   } catch (error) {
-    console.error('Error:', (error as any)?.details);
+    console.error('Error registering sender ID:');
+    if (error instanceof TermiiValidationError) {
+      // Invalid input parameters
+      console.error('Validation error:', error.message);
+    } else if (error instanceof TermiiAuthenticationError) {
+      // Invalid API key or unauthorized
+      console.error('Authentication error:', error.message);
+    } else if (error instanceof TermiiRateLimitError) {
+      // Rate limit exceeded
+      console.error('Rate limit exceeded:', error.message);
+    } else if (error instanceof TermiiAPIError) {
+      // API error (4xx, 5xx)
+      console.error('API error:', error.message, error.statusCode);
+    } else if (error instanceof TermiiNetworkError) {
+      // Network/connection error
+      console.error('Network error:', error.message);
+    } else {
+      // Unknown error
+      console.error('Unexpected error:', error);
+    }
   }
 }
 

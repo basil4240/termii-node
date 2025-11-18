@@ -1,4 +1,4 @@
-import { TermiiClient, CHANNELS, MESSAGE_TYPES, ConsoleLogger } from '../src';
+import { TermiiClient, CHANNELS, MESSAGE_TYPES, ConsoleLogger, TermiiValidationError, TermiiAuthenticationError, TermiiRateLimitError, TermiiAPIError, TermiiNetworkError } from '../src';
 import {
   apiKey,
   baseUrl,
@@ -11,7 +11,7 @@ import {
 const termii = new TermiiClient({
   baseUrl: baseUrl,
   apiKey: apiKey,
-  logger: new ConsoleLogger()
+  logger: new ConsoleLogger(),
 });
 
 // ============================================================================
@@ -31,7 +31,26 @@ async function sendSingleSMS() {
     console.log('Message ID:', result.message_id);
     console.log('Remaining balance:', result.balance);
   } catch (error) {
-    console.error('Error sending message:', error);
+    console.error('Error sending message:');
+    if (error instanceof TermiiValidationError) {
+      // Invalid input parameters
+      console.error('Validation error:', error.message);
+    } else if (error instanceof TermiiAuthenticationError) {
+      // Invalid API key or unauthorized
+      console.error('Authentication error:', error.message);
+    } else if (error instanceof TermiiRateLimitError) {
+      // Rate limit exceeded
+      console.error('Rate limit exceeded:', error.message);
+    } else if (error instanceof TermiiAPIError) {
+      // API error (4xx, 5xx)
+      console.error('API error:', error.message, error.statusCode);
+    } else if (error instanceof TermiiNetworkError) {
+      // Network/connection error
+      console.error('Network error:', error.message);
+    } else {
+      // Unknown error
+      console.error('Unexpected error:', error);
+    }
   }
 }
 
@@ -50,7 +69,26 @@ async function sendToMultiple() {
 
     console.log('Message sent to multiple recipients:', result);
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error Sending Multiple Messages:');
+    if (error instanceof TermiiValidationError) {
+      // Invalid input parameters
+      console.error('Validation error:', error.message);
+    } else if (error instanceof TermiiAuthenticationError) {
+      // Invalid API key or unauthorized
+      console.error('Authentication error:', error.message);
+    } else if (error instanceof TermiiRateLimitError) {
+      // Rate limit exceeded
+      console.error('Rate limit exceeded:', error.message);
+    } else if (error instanceof TermiiAPIError) {
+      // API error (4xx, 5xx)
+      console.error('API error:', error.message, error.statusCode);
+    } else if (error instanceof TermiiNetworkError) {
+      // Network/connection error
+      console.error('Network error:', error.message);
+    } else {
+      // Unknown error
+      console.error('Unexpected error:', error);
+    }
   }
 }
 
@@ -70,7 +108,26 @@ async function sendBulkSMS() {
     console.log('Bulk message sent:', result);
     console.log('Response code:', result.code);
   } catch (error) {
-    console.error('Error sending bulk message:', error);
+    console.error('Error sending bulk message:');
+    if (error instanceof TermiiValidationError) {
+      // Invalid input parameters
+      console.error('Validation error:', error.message);
+    } else if (error instanceof TermiiAuthenticationError) {
+      // Invalid API key or unauthorized
+      console.error('Authentication error:', error.message);
+    } else if (error instanceof TermiiRateLimitError) {
+      // Rate limit exceeded
+      console.error('Rate limit exceeded:', error.message);
+    } else if (error instanceof TermiiAPIError) {
+      // API error (4xx, 5xx)
+      console.error('API error:', error.message, error.statusCode);
+    } else if (error instanceof TermiiNetworkError) {
+      // Network/connection error
+      console.error('Network error:', error.message);
+    } else {
+      // Unknown error
+      console.error('Unexpected error:', error);
+    }
   }
 }
 
@@ -92,7 +149,26 @@ async function sendWhatsAppMedia() {
 
     console.log('WhatsApp media message sent:', result);
   } catch (error) {
-    console.error('Error sending WhatsApp media:', error);
+    console.error('Error sending WhatsApp media:');
+    if (error instanceof TermiiValidationError) {
+      // Invalid input parameters
+      console.error('Validation error:', error.message);
+    } else if (error instanceof TermiiAuthenticationError) {
+      // Invalid API key or unauthorized
+      console.error('Authentication error:', error.message);
+    } else if (error instanceof TermiiRateLimitError) {
+      // Rate limit exceeded
+      console.error('Rate limit exceeded:', error.message);
+    } else if (error instanceof TermiiAPIError) {
+      // API error (4xx, 5xx)
+      console.error('API error:', error.message, error.statusCode);
+    } else if (error instanceof TermiiNetworkError) {
+      // Network/connection error
+      console.error('Network error:', error.message);
+    } else {
+      // Unknown error
+      console.error('Unexpected error:', error);
+    }
   }
 }
 
@@ -111,7 +187,26 @@ async function sendDNDMessage() {
 
     console.log('DND message sent:', result);
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error Sending DND Message:', error);
+    if (error instanceof TermiiValidationError) {
+      // Invalid input parameters
+      console.error('Validation error:', error.message);
+    } else if (error instanceof TermiiAuthenticationError) {
+      // Invalid API key or unauthorized
+      console.error('Authentication error:', error.message);
+    } else if (error instanceof TermiiRateLimitError) {
+      // Rate limit exceeded
+      console.error('Rate limit exceeded:', error.message);
+    } else if (error instanceof TermiiAPIError) {
+      // API error (4xx, 5xx)
+      console.error('API error:', error.message, error.statusCode);
+    } else if (error instanceof TermiiNetworkError) {
+      // Network/connection error
+      console.error('Network error:', error.message);
+    } else {
+      // Unknown error
+      console.error('Unexpected error:', error);
+    }
   }
 }
 
