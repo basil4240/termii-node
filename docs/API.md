@@ -22,8 +22,13 @@ Complete API reference for the Termii Node.js SDK.
   - [create()](#create)
   - [update()](#update)
   - [delete()](#delete)
-- [Contacts](#contacts) _(Coming Soon)_
-- [Campaign](#campaign) _(Coming Soon)_
+- [Contacts](#contacts)_(Coming Soon)_
+
+- [Campaign](#campaign)
+  - [send()](#send-campaign)
+  - [fetchAll()](#fetch-all-campaign)
+  - [history()](#history-campaign)
+  - [retry()](#retry-campaign)
 - [Token](#token) _(Coming Soon)_
 - [Insights](#insight) _(Coming Soon)_
 - [Conversations](#conversation) _(Coming Soon)_
@@ -886,6 +891,224 @@ interface MediaObject {
   caption?: string;
 }
 ```
+
+---
+
+## Contacts
+
+## Campaign
+
+Create, schedule, personalize, resend, and manage SMS campaigns through Termii's Campaign API. Campaigns allow you to broadcast messages to large audiences grouped in phonebooks, with support for scheduled delivery and retrying failed sends.
+
+---
+
+### `send()` <a id="send-campaign"></a>
+
+Create and send a new SMS campaign. Supports **regular**, **personalized**, and **scheduled** campaigns.
+
+**Signature:**
+
+```typescript
+campaign.send(params: SendCampaignRequest): Promise<SendCampaignResponse>
+```
+
+**Parameters:**
+
+| Name                  | Type                                                        | Required | Description                                                   |
+| --------------------- | ----------------------------------------------------------- | -------- | ------------------------------------------------------------- |
+| `country_code`        | `string`                                                    | Yes      | Country code of recipients (e.g., "NG")                       |
+| `sender_id`           | `string`                                                    | Yes      | Sender ID registered on Termii                                |
+| `message`             | `string`                                                    | Yes      | SMS content                                                   |
+| `channel`             | `'generic' \| 'dnd'`                                        | Yes      | SMS route used for delivery                                   |
+| `phonebook_id`        | `string`                                                    | Yes      | Unique ID of the phonebook containing recipients              |
+| `message_type`        | `'plain' \| 'unicode'`                                      | Yes      | Type of message content                                       |
+| `campaign_type`       | `'personalised' \| 'customised'`                            | Yes      | Determines if messages use unique fields for each contact     |
+| `schedule_sms_status` | `'scheduled' \| 'non_scheduled'`                            | Yes      | Whether the campaign is scheduled                             |
+| `schedule_time`       | `string`                                                    | No       | ISO timestamp for scheduled sending (required when scheduled) |
+| `recipient`           | `{ phone_number: string; field: Record<string, string> }[]` | No       | Required for personalised campaigns                           |
+
+**Returns:** `Promise<SendCampaignResponse>`
+
+| Property     | Type     | Description                       |
+| ------------ | -------- | --------------------------------- |
+| `code`       | `string` | API response code                 |
+| `message`    | `string` | Status message                    |
+| `balance`    | `number` | Remaining account balance         |
+| `user`       | `string` | Username tied to the account      |
+| `message_id` | `string` | Unique ID of the created campaign |
+
+**Example (Regular Campaign):**
+
+```typescript
+const result = await termii.campaign.send({
+  country_code: 'NG',
+  sender_id: 'YourBrand',
+  message: 'Promo starts today!',
+  channel: 'generic',
+  phonebook_id: 'pb_10293',
+  message_type: 'plain',
+  campaign_type: 'customised',
+  schedule_sms_status: 'non_scheduled',
+});
+
+console.log(result);
+```
+
+**Example (Personalised Campaign):**
+
+```typescript
+const result = await termii.campaign.send({
+  country_code: 'NG',
+  sender_id: 'YourBrand',
+  message: 'Hello {{name}}, your code is {{code}}',
+  channel: 'generic',
+  phonebook_id: 'pb_90901',
+  message_type: 'plain',
+  campaign_type: 'personalised',
+  schedule_sms_status: 'non_scheduled',
+  recipient: [
+    { phone_number: '2348012345678', field: { name: 'John', code: '1122' } },
+    { phone_number: '2349087654321', field: { name: 'Mary', code: '3344' } },
+  ],
+});
+```
+
+**Example (Scheduled Campaign):**
+
+```typescript
+await termii.campaign.send({
+  country_code: 'NG',
+  sender_id: 'YourBrand',
+  message: "Don't miss our event tomorrow!",
+  channel: 'dnd',
+  phonebook_id: 'pb_48484',
+  message_type: 'plain',
+  campaign_type: 'customised',
+  schedule_sms_status: 'scheduled',
+  schedule_time: '2025-02-15T10:00:00Z',
+});
+```
+
+**Throws:**
+
+- `TermiiValidationError` - Missing required fields or invalid scheduling rules
+- `TermiiAuthenticationError` - Invalid or missing API key
+- `TermiiAPIError` - Server returned an error
+- `TermiiNetworkError` - Failed to connect to Termii API
+
+---
+
+### `fetchAll()` <a id="fetch-all-campaign"></a>
+
+Fetch all campaigns created under your Termii account.
+
+**Signature:**
+
+```typescript
+campaign.fetchAll(): Promise<FetchCampaignsResponse>
+```
+
+**Returns:** `Promise<FetchCampaignsResponse>`
+
+| Property      | Type                | Description             |
+| ------------- | ------------------- | ----------------------- |
+| `page`        | `number`            | Current pagination page |
+| `total_pages` | `number`            | Total available pages   |
+| `data`        | `CampaignSummary[]` | Array of campaigns      |
+
+**Example:**
+
+```typescript
+const list = await termii.campaign.fetchAll();
+console.log(list.data);
+```
+
+**Throws:**
+
+- `TermiiAuthenticationError` - Authentication failed
+- `TermiiAPIError` - API error response
+- `TermiiNetworkError` - Network/connection error
+
+---
+
+### `history()` <a id="history-campaign"></a>
+
+Retrieve delivery history for a specific campaign.
+
+**Signature:**
+
+```typescript
+campaign.history(campaignId: string): Promise<CampaignHistoryResponse>
+```
+
+**Parameters:**
+
+| Name         | Type     | Required | Description        |
+| ------------ | -------- | -------- | ------------------ |
+| `campaignId` | `string` | Yes      | Unique campaign ID |
+
+**Returns:** `Promise<CampaignHistoryResponse>`
+
+| Property      | Type                         | Description                      |
+| ------------- | ---------------------------- | -------------------------------- |
+| `campaign_id` | `string`                     | Campaign identifier              |
+| `total_sent`  | `number`                     | Number of messages attempted     |
+| `delivered`   | `number`                     | Successfully delivered messages  |
+| `failed`      | `number`                     | Failed message count             |
+| `pending`     | `number`                     | Messages still awaiting delivery |
+| `recipients`  | `CampaignHistoryRecipient[]` | Detailed per-recipient status    |
+
+**Example:**
+
+```typescript
+const result = await termii.campaign.history('cmp_12345');
+console.log(result.delivered, result.failed);
+```
+
+**Throws:**
+
+- `TermiiValidationError` - Invalid campaign ID
+- `TermiiAuthenticationError` - Authentication failed
+- `TermiiAPIError` - API error response
+- `TermiiNetworkError` - Network/connection error
+
+---
+
+### `retry()` <a id="retry-campaign"></a>
+
+Retry sending a failed or incomplete campaign.
+
+**Signature:**
+
+```typescript
+campaign.retry(campaignId: string): Promise<RetryCampaignResponse>
+```
+
+**Parameters:**
+
+| Name         | Type     | Required | Description          |
+| ------------ | -------- | -------- | -------------------- |
+| `campaignId` | `string` | Yes      | Campaign ID to retry |
+
+**Returns:** `Promise<RetryCampaignResponse>`
+
+| Property      | Type     | Description                   |
+| ------------- | -------- | ----------------------------- |
+| `message`     | `string` | Status of the retry operation |
+| `campaign_id` | `string` | ID of retried campaign        |
+
+**Example:**
+
+```typescript
+await termii.campaign.retry('cmp_98765');
+```
+
+**Throws:**
+
+- `TermiiValidationError` - Campaign ID missing
+- `TermiiAuthenticationError` - API key invalid
+- `TermiiAPIError` - Retry operation failed
+- `TermiiNetworkError` - Connection issues
 
 ---
 

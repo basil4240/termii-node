@@ -31,7 +31,7 @@ Node.js SDK for the [Termii API](https://termii.com). Send SMS, verify phone num
   - [Templates](#templates)
   - [Phonebooks](#phonebook)
   - [Contacts](#contacts) _(Coming Soon)_
-  - [Campaign](#campaign) _(Coming Soon)_
+  - [Campaigns](#campaigns)
   - [Token](#token) _(Coming Soon)_
   - [Insights](#insight) _(Coming Soon)_
   - [Conversations](#conversation) _(Coming Soon)_
@@ -496,6 +496,139 @@ const termii = new TermiiClient({
 });
 ```
 
+### Contacts
+
+
+### Campaigns
+
+Create and manage SMS campaigns sent to contacts saved in your Termii phonebook. You can send regular or personalized messages, schedule them, enable link tracking, and view campaign history.
+
+#### Send Campaign
+
+Send an SMS campaign to a phonebook group:
+```typescript
+const result = await termii.campaign.send({
+  country_code: "234",
+  sender_id: "YourBrand",
+  message: "Hello customers, enjoy 20% off this week!",
+  channel: "generic",
+  message_type: "plain",
+  phonebook_id: "5f1e8e...",
+  enable_link_tracking: true,
+  campaign_type: "regular",
+  schedule_sms_status: "regular",
+});
+
+console.log(result);
+// {
+//   message: "Your campaign has been scheduled",
+//   campaignId: "dcf2b2b3-af63-41f0-82d6-32956543c4d1",
+//   status: "success"
+// }
+```
+
+#### Personalised Campaign Example
+```typescript
+await termii.campaign.send({
+  country_code: "234",
+  sender_id: "YourBrand",
+  message: "Hello {{name}}, your balance is {{balance}}",
+  channel: "generic",
+  message_type: "plain",
+  phonebook_id: "5f1e8e...",
+  delimiter: "{{}}",
+  campaign_type: "personalized",
+  schedule_sms_status: "regular",
+});
+```
+
+#### Scheduled Campaign Example
+```typescript
+await termii.campaign.send({
+  country_code: "234",
+  sender_id: "BrandX",
+  message: "Tomorrow is the deadline!",
+  channel: "dnd",
+  message_type: "plain",
+  phonebook_id: "group123",
+  schedule_sms_status: "scheduled",
+  schedule_time: "2025-10-23 14:30",
+});
+```
+
+#### Fetch All Campaigns
+
+Retrieve all campaigns with pagination support:
+```typescript
+const campaigns = await termii.campaign.fetchAll();
+
+console.log(campaigns.content);
+// [
+//   {
+//     campaign_id: "d89230f...",
+//     run_at: "2024-01-15T08:00:00Z",
+//     status: "completed",
+//     phone_book: "Customers",
+//     total_recipients: 1500,
+//     ...
+//   },
+//   ...
+// ]
+```
+
+#### Fetch Campaign History
+
+Retrieve detailed analytics, delivery stats, and metadata for a specific campaign:
+```typescript
+const history = await termii.campaign.history("d89230f...");
+
+console.log(history);
+// {
+//   campaignId: "...",
+//   phonebookName: "VIP Customers",
+//   message: "Hello VIP customer...",
+//   totalRecipient: 150,
+//   totalDelivered: 142,
+//   totalFailed: 8,
+//   cost: 450,
+//   runAt: "2024-02-10T17:30:00Z",
+//   status: "completed"
+// }
+```
+
+#### Retry Campaign
+
+Retry sending a failed or incomplete campaign:
+```typescript
+const retry = await termii.campaign.retry("d89230f...");
+
+console.log(retry);
+// {
+//   message: "Campaign has been sent",
+//   status: "success"
+// }
+```
+
+#### Campaign Message Types
+
+- `plain` - Standard text messages
+- `unicode` - Supports emojis and multilingual scripts
+
+#### Campaign Channels
+
+- `generic` - Default route for SMS delivery
+- `dnd` - Attempts delivery to DND-enabled numbers
+
+#### Campaign Types
+
+- `regular` - Standard message sent to all recipients
+- `personalized` - Message fields dynamically replaced per contact
+
+#### Scheduling
+
+- `regular` - Sends immediately
+- `scheduled` - Sends at `schedule_time` provided
+
 ### Configuration Options
 
 | Option          | Type      | Default                     | Description                                     |
@@ -569,6 +702,8 @@ Check out the [examples](./examples) directory for more usage examples:
 - [Sender Id](./examples/sender-id.examples) - Complete sender id examples
 - [Number](./examples/number.examples) - Complete number examples
 - [Template](./examples/template.examples) - Complete template examples
+- [Phonebook](./examples/phonebook.examples) - Complete phonebook examples
+- [Contact](./examples/contact.examples) - Complete contact examples
 
 ### Running Examples
 
@@ -590,6 +725,8 @@ npm run example:sender-id
 npm run example:number
 npm run example:template
 npm run example:phonebook
+npm run example:contact
+npm run example:campaign
 ```
 
 ## API Documentation

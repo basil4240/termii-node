@@ -30,7 +30,9 @@
     "example:sender-id": "npx tsx examples/sender-id.examples.ts",
     "example:number": "npx tsx examples/number.examples.ts",
     "example:template": "npx tsx examples/template.examples.ts",
-    "example:phonebook": "npx tsx examples/phonebook.examples.ts"
+    "example:phonebook": "npx tsx examples/phonebook.examples.ts",
+    "example:contact": "npx tsx examples/contact.examples.ts",
+    "example:campaign": "npx tsx examples/campaign.examples.ts"
   },
   "dependencies": {
     "axios": "^1.13.2"

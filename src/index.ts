@@ -48,5 +48,28 @@ export type {
   SendTemplateResponse
 } from './types';
 
+// Export Phonebook Models
+export type {
+  PhonebookEntry,
+  FetchPhonebooksResponse,
+  CreatePhonebookRequest,
+  CreatePhonebookResponse,
+  UpdatePhonebookRequest,
+  UpdatePhonebookResponse,
+  DeletePhonebookResponse
+} from './types';
+
+// Export Campaing Models
+export type {
+  SendCampaignRequest,
+  SendCampaignResponse,
+  CampaignRecord,
+  FetchCampaignsResponse,
+  CampaignHistory,
+  FetchCampaignHistoryResponse,
+  RetryCampaignRequest,
+  RetryCampaignResponse
+} from './types';
+
 // Export constants
 export * from './constants'

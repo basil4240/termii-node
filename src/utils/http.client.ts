@@ -187,8 +187,11 @@ export class HTTPClient {
     return this.request<T>({ method: 'PUT', url, data });
   }
 
-  async patch<T = any>(url: string, data?: any): Promise<HTTPResponse<T>> {
-    return this.request<T>({ method: 'PATCH', url, data });
+  async patch<T = any>(
+    url: string,
+    payload?: { params?: Record<string, any>; data?: any }
+  ): Promise<HTTPResponse<T>> {
+    return this.request<T>({ method: 'PATCH', url, params: payload?.params, data: payload?.data });
   }
 
   async delete<T = any>(

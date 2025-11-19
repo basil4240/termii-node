@@ -1,4 +1,4 @@
-import { NUMBER_MESSAGE_TYPES } from "../constants";
+import { MESSAGE_TYPES } from "../constants";
 import { SendNumberMessageRequest, SendNumberMessageResponse } from "../types";
 import { TermiiValidationError } from "../utils";
 import { Validator } from "../utils";
@@ -30,9 +30,9 @@ export class NumberResource extends BaseResource {
     Validator.validatePhoneNumber(params.to);
 
     // Validate message type
-    if (params.type && !Object.values(NUMBER_MESSAGE_TYPES).includes(params.type as any)) {
+    if (params.type && !Object.values(MESSAGE_TYPES).includes(params.type as any)) {
       throw new TermiiValidationError(
-        `Invalid message type. Must be one of: ${Object.values(NUMBER_MESSAGE_TYPES).join(', ')}`
+        `Invalid message type. Must be one of: ${Object.values(MESSAGE_TYPES).join(', ')}`
       );
     }
 

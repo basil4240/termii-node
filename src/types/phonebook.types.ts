@@ -15,8 +15,6 @@ export interface PhonebookEntry {
   date_created: string;
 }
 
-// ========================= Request / Response Interfaces =========================
-
 /** Response for fetching all phonebooks (paginated) */
 export interface FetchPhonebooksResponse {
   content: PhonebookEntry[];
