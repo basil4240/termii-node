@@ -33,7 +33,7 @@ export class TemplateResource extends BaseResource {
     // Prepare request payload
     const payload: SendTemplateRequest = {
       ...params,
-      api_key: (this as any).apiKey,
+      api_key: this.apiKey,
     };
 
     // Send request
@@ -80,7 +80,7 @@ export class TemplateResource extends BaseResource {
     // Prepare request payload
     const payload: SendTemplateWithMediaRequest = {
       ...params,
-      api_key: (this as any).apiKey,
+      api_key: this.apiKey,
     };
 
     // Send request

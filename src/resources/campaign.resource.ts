@@ -40,7 +40,7 @@ export class CampaignResource extends BaseResource {
     // Prepare request payload
     const payload: SendCampaignRequest = {
       ...params,
-      api_key: (this as any).apiKey,
+      api_key: this.apiKey,
     };
 
     const response = await this.http.post<SendCampaignResponse>(
@@ -60,7 +60,7 @@ export class CampaignResource extends BaseResource {
     this.debug('Fetching all campaing');
 
     const response = await this.http.get<FetchCampaignsResponse>(this.CAMPAIGNS_ENDPOINT, {
-      api_key: (this as any).apiKey,
+      api_key: this.apiKey,
     });
 
     this.debug('All Campaign fetched', response);
@@ -77,7 +77,7 @@ export class CampaignResource extends BaseResource {
 
     const response = await this.http.get<FetchCampaignHistoryResponse>(
       `${this.CAMPAIGNS_ENDPOINT}?campaign_id=${campaignId}`,
-      { api_key: (this as any).apiKey }
+      { api_key: this.apiKey }
     );
 
     this.debug('Campaign history response:', response);
@@ -95,7 +95,7 @@ export class CampaignResource extends BaseResource {
     const response = await this.http.patch<RetryCampaignResponse>(
       `${this.CAMPAIGNS_ENDPOINT}/${campaignId}`,
       {
-        data: { api_key: (this as any).apiKey },
+        data: { api_key: this.apiKey },
       }
     );
 

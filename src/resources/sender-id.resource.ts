@@ -30,7 +30,7 @@ export class SenderIdResource extends BaseResource {
 
     // Build query params
     const query: Record<string, any> = {
-      api_key: (this as any).apiKey,
+      api_key: this.apiKey,
     };
 
     if (params?.page !== undefined) query.page = params.page;
@@ -73,7 +73,7 @@ export class SenderIdResource extends BaseResource {
     // Prepare payload (inject api_key)
     const payload: RequestSenderIdRequest = {
       ...params,
-      api_key: (this as any).apiKey,
+      api_key: this.apiKey,
     };
 
     const response = await this.http.post<RequestSenderIdResponse>(this.REQUEST_ENDPOINT, payload);

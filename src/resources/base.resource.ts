@@ -3,11 +3,15 @@ import type { Logger } from '../types/common.types';
 
 export abstract class BaseResource {
   protected http: HTTPClient;
+  protected apiKey: string;
   protected logger?: Logger;
+  protected validateInput?: boolean;
 
-  constructor(http: HTTPClient, logger?: Logger) {
+  constructor(http: HTTPClient, apiKey: string, logger?: Logger, validateInput?: boolean) {
     this.http = http;
     this.logger = logger;
+    this.apiKey = apiKey;
+    this.validateInput = validateInput;
   }
 
   /**

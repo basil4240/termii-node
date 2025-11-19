@@ -39,7 +39,7 @@ export class MessagingResource extends BaseResource {
     // Prepare request payload
     const payload: SendMessageRequest = {
       ...params,
-      api_key: (this as any).apiKey,
+      api_key: this.apiKey,
     };
 
     // Send request
@@ -79,7 +79,7 @@ export class MessagingResource extends BaseResource {
     // Prepare request payload
     const payload: SendBulkMessageRequest = {
       ...params,
-      api_key: (this as any).apiKey,
+      api_key: this.apiKey,
     };
 
     // Send request
@@ -136,7 +136,7 @@ export class MessagingResource extends BaseResource {
       // Prepare request payload
       const payload: SendMessageRequest = {
         ...params,
-        api_key: (this as any).apiKey,
+        api_key: this.apiKey,
       };
 
       // Send request

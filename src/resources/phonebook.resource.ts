@@ -2,23 +2,15 @@ import {
   CreatePhonebookRequest,
   CreatePhonebookResponse,
   DeletePhonebookResponse,
-  Logger,
   UpdatePhonebookRequest,
   UpdatePhonebookResponse,
 } from '../types';
 import { FetchPhonebooksResponse } from '../types';
-import { HTTPClient, TermiiValidationError, Validator } from '../utils';
+import { TermiiValidationError, Validator } from '../utils';
 import { BaseResource } from './base.resource';
 
 export class PhonebookResource extends BaseResource {
   private readonly PHONEBOOKS_ENDPOINT = '/api/phonebooks';
-  //   private readonly CREATE_ENDPOINT = "/api/phonebooks/create";
-  //   private readonly UPDATE_ENDPOINT = "/api/phonebooks/update";
-  //   private readonly DELETE_ENDPOINT = "/api/phonebooks/delete";
-
-  constructor(http: HTTPClient, logger?: Logger) {
-    super(http, logger);
-  }
 
   /**
    * Fetch all phonebooks (paginated)
@@ -85,7 +77,7 @@ export class PhonebookResource extends BaseResource {
 
     const response = await this.http.patch<UpdatePhonebookResponse>(
       `${this.PHONEBOOKS_ENDPOINT}/${phonebook_id}`,
-      payload
+      { data: payload }
     );
 
     this.debug('Phonebook updated:', response.data);

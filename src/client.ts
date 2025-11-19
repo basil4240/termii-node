@@ -1,10 +1,12 @@
 import { DEFAULT_CONFIG } from './config';
-import { PhonebookResource } from './resources';
-import { CampaignResource } from './resources/campaign.resources';
-import { MessagingResource } from './resources/messaging.resource';
-import { NumberResource } from './resources/number.resource';
-import { SenderIdResource } from './resources/sender-id.resource';
-import { TemplateResource } from './resources/template.resource';
+import {
+  CampaignResource,
+  MessagingResource,
+  NumberResource,
+  PhonebookResource,
+  SenderIdResource,
+  TemplateResource,
+} from './resources';
 import { Logger, TermiiConfig } from './types';
 import { TermiiValidationError } from './utils/errors';
 import { HTTPClient } from './utils/http.client';
@@ -49,12 +51,12 @@ export class TermiiClient {
     );
 
     // Initialize resources
-    this.messaging = this.createMessagingResource();
-    this.senderId = this.createSenderIdResource();
-    this.numberMessage = this.createNumberResource();
-    this.templateMessage = this.createTemplateResource();
-    this.phonebook = this.createPhonebookResource();
-    this.campaign = this.createCampaignResource();
+    this.messaging = new MessagingResource(this.http, this.apiKey, this.config.logger);
+    this.senderId = new SenderIdResource(this.http, this.apiKey, this.config.logger);
+    this.numberMessage = new NumberResource(this.http, this.apiKey, this.config.logger);
+    this.templateMessage = new TemplateResource(this.http, this.apiKey, this.config.logger);
+    this.phonebook = new PhonebookResource(this.http, this.apiKey, this.config.logger);
+    this.campaign = new CampaignResource(this.http, this.apiKey, this.config.logger);
 
     // Log the initialization
     this.config.logger?.info('Termii client initialized', {
@@ -77,48 +79,6 @@ export class TermiiClient {
       apiKey,
       baseUrl,
     });
-  }
-
-  private createMessagingResource(): MessagingResource {
-    const resource = new MessagingResource(this.http, this.config.logger);
-    // Inject apiKey into resource
-    (resource as any).apiKey = this.apiKey;
-    return resource;
-  }
-
-  private createSenderIdResource(): SenderIdResource {
-    const resource = new SenderIdResource(this.http, this.config.logger);
-    // Inject apiKey into resource
-    (resource as any).apiKey = this.apiKey;
-    return resource;
-  }
-
-  private createNumberResource(): NumberResource {
-    const resource = new NumberResource(this.http, this.config.logger);
-    // Inject apiKey into resource
-    (resource as any).apiKey = this.apiKey;
-    return resource;
-  }
-
-  private createTemplateResource(): TemplateResource {
-    const resource = new TemplateResource(this.http, this.config.logger);
-    // Inject apiKey into resource
-    (resource as any).apiKey = this.apiKey;
-    return resource;
-  }
-
-  private createPhonebookResource(): PhonebookResource {
-    const resource = new PhonebookResource(this.http, this.config.logger);
-    // Inject apiKey into resource
-    (resource as any).apiKey = this.apiKey;
-    return resource;
-  }
-
-  private createCampaignResource(): CampaignResource {
-    const resource = new CampaignResource(this.http, this.config.logger);
-    // Inject apiKey into resource
-    (resource as any).apiKey = this.apiKey;
-    return resource;
   }
 
   /**

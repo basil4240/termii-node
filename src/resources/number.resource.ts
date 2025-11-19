@@ -39,7 +39,7 @@ export class NumberResource extends BaseResource {
     // Prepare request payload
     const payload: SendNumberMessageRequest = {
       ...params,
-      api_key: (this as any).apiKey,
+      api_key: this.apiKey,
     };
 
     // Send request
