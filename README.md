@@ -30,7 +30,7 @@ Node.js SDK for the [Termii API](https://termii.com). Send SMS, verify phone num
   - [Number](#number)
   - [Templates](#templates)
   - [Phonebooks](#phonebook)
-  - [Contacts](#contacts) _(Coming Soon)_
+  - [Contacts](#contacts)
   - [Campaigns](#campaigns)
   - [Token](#token) _(Coming Soon)_
   - [Insights](#insight) _(Coming Soon)_
@@ -497,6 +497,93 @@ const termii = new TermiiClient({
 ```
 
 ### Contacts
+
+Manage your phonebook contacts: add, fetch, bulk upload, and delete contacts.
+
+#### Fetch Contacts
+
+Retrieve all contacts in a specific phonebook:
+```typescript
+const contacts = await termii.contact.fetch("phonebook_id_123");
+
+console.log(contacts.content);
+// [
+//   {
+//     id: "c1d2e3f4",
+//     pid: "phonebook_id_123",
+//     phone_number: "2348012345678",
+//     contact_list_key_value: [
+//       { key: "first_name", value: "John" },
+//       { key: "last_name", value: "Doe" },
+//     ]
+//   },
+//   ...
+// ]
+```
+
+#### Add Contact
+
+Add a single contact to a phonebook:
+```typescript
+const newContact = await termii.contact.addSingle({
+  pid: "phonebook_id_123",
+  phone_number: "2348012345678",
+  first_name: "John",
+  last_name: "Doe",
+  email_address: "john.doe@example.com",
+  company: "Acme Inc."
+});
+
+console.log(newContact);
+// {
+//   id: "c1d2e3f4",
+//   phone_number: "2348012345678",
+//   first_name: "John",
+//   last_name: "Doe",
+//   email_address: "john.doe@example.com",
+//   company: "Acme Inc.",
+//   created_at: "2025-11-18T12:34:56Z",
+//   updated_at: "2025-11-18T12:34:56Z"
+// }
+```
+
+#### Bulk Upload Contacts
+
+Upload multiple contacts using a CSV file:
+```typescript
+const uploadResult = await termii.contact.addMultipleBulkF({
+  pid: "phonebook_id_123",
+  country_code: "234",
+  file: csvFile, // File object or Blob
+});
+
+console.log(uploadResult);
+// { message: "Contacts uploaded successfully" }
+```
+
+#### Delete Contact
+
+Delete a specific contact from a phonebook:
+```typescript
+const deleted = await termii.contact.delete({
+  pid: "phonebook_id_123",
+  id: "c1d2e3f4",
+});
+
+console.log(deleted);
+// {
+//   code: 200,
+//   data: { message: "Contact deleted successfully" },
+//   message: "Contact deleted successfully",
+//   status: "success"
+// }
+```
+
+#### Notes
+
+- `phone_number` must be in international format
+- `pid` refers to the Phonebook ID the contact belongs to
+- Bulk uploads require a CSV file with the correct headers matching Termii contact fields
 
 
 ### Campaigns

@@ -35,7 +35,8 @@
     "example:campaign": "npx tsx examples/campaign.examples.ts"
   },
   "dependencies": {
-    "axios": "^1.13.2"
+    "axios": "^1.13.2",
+    "form-data": "^4.0.5"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",

@@ -7,6 +7,7 @@ import {
   SenderIdResource,
   TemplateResource,
 } from './resources';
+import { ContactResource } from './resources/contact.resource';
 import { Logger, TermiiConfig } from './types';
 import { TermiiValidationError } from './utils/errors';
 import { HTTPClient } from './utils/http.client';
@@ -23,6 +24,7 @@ export class TermiiClient {
   public readonly templateMessage: TemplateResource;
   public readonly phonebook: PhonebookResource;
   public readonly campaign: CampaignResource;
+  public readonly contact: ContactResource;
 
   constructor(config: TermiiConfig) {
     // Validate API key
@@ -57,11 +59,13 @@ export class TermiiClient {
     this.templateMessage = new TemplateResource(this.http, this.apiKey, this.config.logger);
     this.phonebook = new PhonebookResource(this.http, this.apiKey, this.config.logger);
     this.campaign = new CampaignResource(this.http, this.apiKey, this.config.logger);
+    this.contact = new ContactResource(this.http, this.apiKey, this.config.logger);
 
     // Log the initialization
     this.config.logger?.info('Termii client initialized', {
       baseUrl: this.config.baseUrl,
     });
+    
   }
 
   /**

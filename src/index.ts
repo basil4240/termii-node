@@ -31,21 +31,18 @@ export type {
   SenderIdEntry,
   FetchSenderIdResponse,
   RequestSenderIdRequest,
-  RequestSenderIdResponse
-} from './types'
+  RequestSenderIdResponse,
+} from './types';
 
 // Export Number Message Models
-export type {
-  SendNumberMessageRequest,
-  SendNumberMessageResponse
-} from './types';
+export type { SendNumberMessageRequest, SendNumberMessageResponse } from './types';
 
 // Export Template Message Models
 export type {
   TemplateMedia,
   SendTemplateRequest,
   SendTemplateWithMediaRequest,
-  SendTemplateResponse
+  SendTemplateResponse,
 } from './types';
 
 // Export Phonebook Models
@@ -56,7 +53,7 @@ export type {
   CreatePhonebookResponse,
   UpdatePhonebookRequest,
   UpdatePhonebookResponse,
-  DeletePhonebookResponse
+  DeletePhonebookResponse,
 } from './types';
 
 // Export Campaing Models
@@ -68,8 +65,20 @@ export type {
   CampaignHistory,
   FetchCampaignHistoryResponse,
   RetryCampaignRequest,
-  RetryCampaignResponse
+  RetryCampaignResponse,
+} from './types';
+
+// Export Campaing Models
+export type {
+  ContactKeyValue,
+  FetchContactsResponse,
+  AddSingleContactRequest,
+  AddMultipleContactsRequest,
+  ContactEntry,
+  AddSingleContactResponse,
+  AddMultipleContactsResponse,
+  DeleteContactResponse,
 } from './types';
 
 // Export constants
-export * from './constants'
+export * from './constants';

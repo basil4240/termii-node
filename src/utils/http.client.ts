@@ -179,8 +179,8 @@ export class HTTPClient {
     return this.request<T>({ method: 'GET', url, params });
   }
 
-  async post<T = any>(url: string, data?: any): Promise<HTTPResponse<T>> {
-    return this.request<T>({ method: 'POST', url, data });
+  async post<T = any>(url: string, data?: any, headers?: Record<string, string>): Promise<HTTPResponse<T>> {
+    return this.request<T>({ method: 'POST', url, data, headers });
   }
 
   async put<T = any>(url: string, data?: any): Promise<HTTPResponse<T>> {
