@@ -22,7 +22,7 @@ describe('MessagingResource', () => {
     mockAxios = testSetup.mockAxios;
     
     // Create messaging resource with the mocked HTTP client (no logger in tests)
-    messagingResource = new MessagingResource(testSetup.httpClient, undefined);
+    messagingResource = new MessagingResource(testSetup.httpClient, apiKey, undefined);
     
     // Inject API key (mimicking what TermiiClient does)
     (messagingResource as any).apiKey = apiKey;
