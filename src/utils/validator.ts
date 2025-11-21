@@ -46,7 +46,7 @@ export class Validator {
   /**
    * Validate required fields
    */
-  static validateRequired(fields: Record<string, any>): void {
+  static validateRequired(fields: Record<string, unknown>): void {
     const missing: string[] = [];
 
     for (const [key, value] of Object.entries(fields)) {

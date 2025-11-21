@@ -19,7 +19,7 @@ export class PhonebookResource extends BaseResource {
     this.debug('Fetching all phonebooks...');
 
     const response = await this.http.get<FetchPhonebooksResponse>(this.PHONEBOOKS_ENDPOINT, {
-      api_key: (this as any).apiKey,
+      api_key: this.apiKey,
     });
 
     this.debug('Fetch result:', response.data);
@@ -39,7 +39,7 @@ export class PhonebookResource extends BaseResource {
     // Prepare request payload
     const payload: CreatePhonebookRequest = {
       ...params,
-      api_key: (this as any).apiKey,
+      api_key: this.apiKey,
     };
 
     const response = await this.http.post<CreatePhonebookResponse>(
@@ -70,9 +70,9 @@ export class PhonebookResource extends BaseResource {
     });
 
     // Prepare request payload
-    const payload: CreatePhonebookRequest = {
+    const payload: UpdatePhonebookRequest = {
       ...params,
-      api_key: (this as any).apiKey,
+      api_key: this.apiKey,
     };
 
     const response = await this.http.patch<UpdatePhonebookResponse>(
@@ -96,7 +96,7 @@ export class PhonebookResource extends BaseResource {
 
     const response = await this.http.delete<DeletePhonebookResponse>(
       `${this.PHONEBOOKS_ENDPOINT}/${phonebook_id}`,
-      { params: { api_key: (this as any).apiKey } }
+      { params: { api_key: this.apiKey } }
     );
 
     this.debug('Phonebook deleted:', response.data);

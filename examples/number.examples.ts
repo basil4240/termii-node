@@ -1,6 +1,6 @@
 import {
   ConsoleLogger,
-  NUMBER_MESSAGE_TYPES,
+  MESSAGE_TYPES, // Corrected import
   TermiiAPIError,
   TermiiAuthenticationError,
   TermiiClient,
@@ -25,7 +25,7 @@ async function sendMessage() {
     const result = await termii.numberMessage.send({
       to: singlePhoneNumber,
       sms: 'Hello from Termii Number API!',
-      type: NUMBER_MESSAGE_TYPES.PLAIN,
+      type: MESSAGE_TYPES.PLAIN,
     });
 
     console.log('Number Sent:', result);

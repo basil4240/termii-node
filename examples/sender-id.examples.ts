@@ -55,7 +55,7 @@ async function registerSenderId() {
   try {
     const result = await termii.senderId.request({
       sender_id: 'Suuii',
-      useCase: 'Your OTP code is:',
+      useCase: 'Sending OTPs for user authentication and verification.',
       company: 'Suuii Corp',
     });
 

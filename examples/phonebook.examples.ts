@@ -85,6 +85,7 @@ async function createPhonebook() {
 
 // ============================================================================
 // Example 3: Update Phonebook
+// NOTE: Replace '691b515f68ac147441352d31' with a valid phonebook ID from your Termii account.
 // ============================================================================
 async function updatePhonebook() {
   try {
@@ -120,6 +121,7 @@ async function updatePhonebook() {
 
 // ============================================================================
 // Example 4: Delete Phonebook
+// NOTE: Replace '691b515f68ac147441352d31' with a valid phonebook ID from your Termii account.
 // ============================================================================
 async function deletePhonebook() {
   try {

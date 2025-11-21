@@ -19,13 +19,13 @@ export interface TermiiConfig {
 }
 
 export interface Logger {
-  debug(message: string, ...args: any[]): void;
-  info(message: string, ...args: any[]): void;
-  warn(message: string, ...args: any[]): void;
-  error(message: string, ...args: any[]): void;
+  debug(message: string, ...args: unknown[]): void;
+  info(message: string, ...args: unknown[]): void;
+  warn(message: string, ...args: unknown[]): void;
+  error(message: string, ...args: unknown[]): void;
 }
 
-export interface TermiiResponse<T = any> {
+export interface TermiiResponse<T = unknown> {
   success: boolean;
   data: T;
   message?: string;
@@ -38,13 +38,13 @@ export interface TermiiResponse<T = any> {
 export interface HTTPRequestConfig {
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
   url: string;
-  data?: any;
-  params?: Record<string, any>;
+  data?: unknown;
+  params?: Record<string, unknown>;
   headers?: Record<string, string>;
   timeout?: number;
 }
 
-export interface HTTPResponse<T = any> {
+export interface HTTPResponse<T = unknown> {
   data: T;
   status: number;
   statusText: string;

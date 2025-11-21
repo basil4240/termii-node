@@ -100,15 +100,25 @@ export class HTTPClient {
     }
   }
 
-  private extractErrorMessage(data: any): string {
+  private extractErrorMessage(data: unknown): string {
     if (typeof data === 'string') return data;
-    if (data?.message) return data.message;
-    if (data?.error) return data.error;
-    if (data?.errors) {
-      if (Array.isArray(data.errors)) {
-        return data.errors.join(', ');
+    if (typeof data === 'object' && data !== null) {
+      if ('message' in data && typeof (data as { message: unknown }).message === 'string') {
+        return (data as { message: string }).message;
       }
-      return JSON.stringify(data.errors);
+      if ('error' in data && typeof (data as { error: unknown }).error === 'string') {
+        return (data as { error: string }).error;
+      }
+      if ('errors' in data) {
+        const errors = (data as { errors: unknown }).errors;
+        if (Array.isArray(errors) && errors.every((e) => typeof e === 'string')) {
+          return errors.join(', ');
+        }
+        if (typeof errors === 'object' && errors !== null) {
+          // If errors is an object, stringify it
+          return JSON.stringify(errors);
+        }
+      }
     }
     return 'An error occurred while processing your request';
   }
@@ -137,7 +147,7 @@ export class HTTPClient {
     }
   }
 
-  private isRetryableError(error: any): boolean {
+  private isRetryableError(error: unknown): boolean {
     // Retry on network errors or 5xx server errors
     if (error instanceof TermiiNetworkError) return true;
     if (error instanceof TermiiAPIError) {
@@ -155,7 +165,7 @@ export class HTTPClient {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
-  async request<T = any>(config: HTTPRequestConfig): Promise<HTTPResponse<T>> {
+  async request<T = unknown>(config: HTTPRequestConfig): Promise<HTTPResponse<T>> {
     const axiosConfig: AxiosRequestConfig = {
       method: config.method,
       url: config.url,
@@ -175,32 +185,32 @@ export class HTTPClient {
     };
   }
 
-  async get<T = any>(url: string, params?: Record<string, any>): Promise<HTTPResponse<T>> {
+  async get<T = unknown>(url: string, params?: Record<string, unknown>): Promise<HTTPResponse<T>> {
     return this.request<T>({ method: 'GET', url, params });
   }
 
-  async post<T = any>(
+  async post<T = unknown>(
     url: string,
-    data?: any,
+    data?: unknown,
     headers?: Record<string, string>
   ): Promise<HTTPResponse<T>> {
     return this.request<T>({ method: 'POST', url, data, headers });
   }
 
-  async put<T = any>(url: string, data?: any): Promise<HTTPResponse<T>> {
+  async put<T = unknown>(url: string, data?: unknown): Promise<HTTPResponse<T>> {
     return this.request<T>({ method: 'PUT', url, data });
   }
 
-  async patch<T = any>(
+  async patch<T = unknown>(
     url: string,
-    payload?: { params?: Record<string, any>; data?: any }
+    payload?: { params?: Record<string, unknown>; data?: unknown }
   ): Promise<HTTPResponse<T>> {
     return this.request<T>({ method: 'PATCH', url, params: payload?.params, data: payload?.data });
   }
 
-  async delete<T = any>(
+  async delete<T = unknown>(
     url: string,
-    payload?: { params?: Record<string, any>; data?: any }
+    payload?: { params?: Record<string, unknown>; data?: unknown }
   ): Promise<HTTPResponse<T>> {
     return this.request<T>({ method: 'DELETE', url, params: payload?.params, data: payload?.data });
   }

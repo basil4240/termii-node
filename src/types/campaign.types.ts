@@ -116,11 +116,9 @@ export interface CampaignHistory {
   personalized: boolean;
 }
 
-export interface FetchCampaignHistoryResponse extends CampaignHistory {
-  /* same as single history item */
-}
+export type FetchCampaignHistoryResponse = CampaignHistory;
 
-export type RetryCampaignRequest = {};
+export type RetryCampaignRequest = Record<string, never>;
 
 export interface RetryCampaignResponse {
   message: string;

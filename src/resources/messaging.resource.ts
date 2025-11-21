@@ -1,5 +1,6 @@
 import { TermiiValidationError } from '../utils';
 import { MESSAGE_TYPES } from '../constants';
+import type { Channel, MessageType } from '../constants'; // Moved and added 'type' keyword
 import {
   SendBulkMessageRequest,
   SendBulkMessageResponse,
@@ -131,7 +132,7 @@ export class MessagingResource extends BaseResource {
     }
 
     // Validate inputs (excluding sms since we're using media)
-    this.validateSendRequest(params as any, true);
+    this.validateSendRequest(params as SendMessageRequest, true);
 
     // Prepare request payload
     const payload: SendMessageRequest = {
@@ -179,14 +180,14 @@ export class MessagingResource extends BaseResource {
     Validator.validateSenderId(params.from);
 
     // Validate channel
-    if (!Object.values(CHANNELS).includes(params.channel as any)) {
+    if (!(Object.values(CHANNELS) as Channel[]).includes(params.channel)) {
       throw new TermiiValidationError(
         `Invalid channel. Must be one of: ${Object.values(CHANNELS).join(', ')}`
       );
     }
 
     // Validate message type
-    if (!Object.values(MESSAGE_TYPES).includes(params.type as any)) {
+    if (!(Object.values(MESSAGE_TYPES) as MessageType[]).includes(params.type)) {
       throw new TermiiValidationError(
         `Invalid message type. Must be one of: ${Object.values(MESSAGE_TYPES).join(', ')}`
       );
@@ -227,14 +228,14 @@ export class MessagingResource extends BaseResource {
     Validator.validateSenderId(params.from);
 
     // Validate channel
-    if (!Object.values(CHANNELS).includes(params.channel as any)) {
+    if (!(Object.values(CHANNELS) as Channel[]).includes(params.channel)) {
       throw new TermiiValidationError(
         `Invalid channel. Must be one of: ${Object.values(CHANNELS).join(', ')}`
       );
     }
 
     // Validate message type
-    if (!Object.values(MESSAGE_TYPES).includes(params.type as any)) {
+    if (!(Object.values(MESSAGE_TYPES) as MessageType[]).includes(params.type)) {
       throw new TermiiValidationError(
         `Invalid message type. Must be one of: ${Object.values(MESSAGE_TYPES).join(', ')}`
       );

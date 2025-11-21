@@ -1,16 +1,16 @@
 import { Logger } from '../types';
 
 export class ConsoleLogger implements Logger {
-  debug(message: string, ...args: any[]) {
+  debug(message: string, ...args: unknown[]) {
     console.debug(message, ...args);
   }
-  info(message: string, ...args: any[]) {
+  info(message: string, ...args: unknown[]) {
     console.info(message, ...args);
   }
-  warn(message: string, ...args: any[]) {
+  warn(message: string, ...args: unknown[]) {
     console.warn(message, ...args);
   }
-  error(message: string, ...args: any[]) {
+  error(message: string, ...args: unknown[]) {
     console.error(message, ...args);
   }
 }

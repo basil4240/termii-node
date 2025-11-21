@@ -32,7 +32,7 @@ export class NumberResource extends BaseResource {
     Validator.validatePhoneNumber(params.to);
 
     // Validate message type
-    if (params.type && !Object.values(MESSAGE_TYPES).includes(params.type as any)) {
+    if (params.type && !(Object.values(MESSAGE_TYPES) as MessageType[]).includes(params.type)) {
       throw new TermiiValidationError(
         `Invalid message type. Must be one of: ${Object.values(MESSAGE_TYPES).join(', ')}`
       );

@@ -1,59 +1,39 @@
-# Termii SDK API Documentation
+# Termii Node.js SDK - API Documentation
 
 Complete API reference for the Termii Node.js SDK.
 
 ## Table of Contents
 
 - [Client Initialization](#client-initialization)
-- [Messaging](#messaging)
-  - [send()](#send)
-  - [sendBulk()](#sendbulk)
-  - [sendWithMedia()](#sendwithmedia)
-- [Sender ID](#sender-id)
-  - [request()](#request)
-  - [fetch()](#fetch)
-- [Number](#number)
-  - [send()](#send)
-- [Templates](#templates)
-  - [sendTemplate()](#sendTemplate)
-  - [sendTemplateWithMedia()](#sendTemplateWithMedia)
-- [Phonebook](#phonebook)
-  - [fetchAll()](#fetchAll)
-  - [create()](#create)
-  - [update()](#update)
-  - [delete()](#delete)
-- [Contacts](#contacts)_(Coming Soon)_
-
-- [Campaign](#campaign)
-  - [send()](#send-campaign)
-  - [fetchAll()](#fetch-all-campaign)
-  - [history()](#history-campaign)
-  - [retry()](#retry-campaign)
-- [Token](#token) _(Coming Soon)_
-- [Insights](#insight) _(Coming Soon)_
-- [Conversations](#conversation) _(Coming Soon)_
-- [Types](#types)
+  - [`new TermiiClient(config)`](#new-termiiclientconfig)
+  - [`TermiiClient.fromEnv()`](#termiiclientfromenv)
+- [Resources](#resources)
+  - [Messaging](#messaging)
+  - [Sender ID](#sender-id)
+  - [Number](#number)
+  - [Templates](#templates)
+  - [Phonebook](#phonebook)
+  - [Contacts](#contacts)
+  - [Campaigns](#campaigns)
 - [Error Handling](#error-handling)
 
 ---
 
 ## Client Initialization
 
+The `TermiiClient` is the main entry point for interacting with the Termii API.
+
 ### `new TermiiClient(config)`
 
 Creates a new Termii client instance.
 
-**Parameters:**
-
-| Name                   | Type           | Required | Description                                         |
-| ---------------------- | -------------- | -------- | --------------------------------------------------- |
-| `config`               | `TermiiConfig` | Yes      | Configuration object                                |
-| `config.apiKey`        | `string`       | Yes      | Your Termii API key                                 |
-| `config.baseUrl`       | `string`       | No       | API base URL (default: `https://api.ng.termii.com`) |
-| `config.timeout`       | `number`       | No       | Request timeout in ms (default: `30000`)            |
-| `config.retries`       | `number`       | No       | Number of retries (default: `3`)                    |
-| `config.validateInput` | `boolean`      | No       | Enable input validation (default: `true`)           |
-| `config.logger`        | `Logger`       | No       | Custom logger instance                              |
+-   **`config`**: `TermiiConfig` - The configuration object.
+    -   `apiKey`: `string` - **Required**. Your Termii API key.
+    -   `baseUrl?`: `string` - Optional. The base URL for API requests. Defaults to `https://api.ng.termii.com`.
+    -   `timeout?`: `number` - Optional. Request timeout in milliseconds. Defaults to `30000`.
+    -   `retries?`: `number` - Optional. Number of retry attempts for failed requests. Defaults to `3`.
+    -   `validateInput?`: `boolean` - Optional. Enable input validation before API calls. Defaults to `true`.
+    -   `logger?`: `Logger` - Optional. A custom logger instance (e.g., `console`).
 
 **Example:**
 
@@ -61,439 +41,169 @@ Creates a new Termii client instance.
 import { TermiiClient } from 'termii-node';
 
 const termii = new TermiiClient({
-  apiKey: 'your-api-key',
-  timeout: 30000,
-  retries: 3,
+  apiKey: 'YOUR_API_KEY',
 });
 ```
 
 ### `TermiiClient.fromEnv()`
 
-Creates a client from environment variables.
+Creates a client instance from environment variables.
 
 **Environment Variables:**
 
-- `TERMII_API_KEY` (required)
-- `TERMII_BASE_URL` (optional)
+-   `TERMII_API_KEY`: **Required**. Your Termii API key.
+-   `TERMII_BASE_URL`: Optional.
 
 **Example:**
 
 ```typescript
+import { TermiiClient } from 'termii-node';
+
 const termii = TermiiClient.fromEnv();
 ```
 
 ---
 
-## Messaging
+## Resources
 
-Send SMS messages to single or multiple recipients.
+### Messaging
 
-### `send()`
+Accessed via `termii.messaging`.
 
-Send an SMS message to a single recipient or multiple recipients (up to 100).
+#### `send(params)`
 
-**Signature:**
+Sends an SMS message to a single or multiple recipients (up to 100).
 
-```typescript
-messaging.send(params: SendMessageRequest): Promise<SendMessageResponse>
-```
-
-**Parameters:**
-
-| Name      | Type                               | Required | Description                                       |
-| --------- | ---------------------------------- | -------- | ------------------------------------------------- |
-| `to`      | `string \| string[]`               | Yes      | Recipient phone number(s) in international format |
-| `from`    | `string`                           | Yes      | Sender ID (alphanumeric, max 11 characters)       |
-| `sms`     | `string`                           | Yes      | Message content                                   |
-| `type`    | `'plain' \| 'unicode'`             | Yes      | Message type                                      |
-| `channel` | `'generic' \| 'dnd' \| 'whatsapp'` | Yes      | Delivery channel                                  |
-| `media`   | `MediaObject`                      | No       | Media attachment (WhatsApp only)                  |
-
-**Returns:** `Promise<SendMessageResponse>`
-
-| Property     | Type     | Description               |
-| ------------ | -------- | ------------------------- |
-| `message_id` | `string` | Unique message identifier |
-| `message`    | `string` | Status message            |
-| `balance`    | `number` | Remaining account balance |
-| `user`       | `string` | Account username          |
+-   **`params`**: `Omit<SendMessageRequest, 'api_key'>`
+-   **Returns**: `Promise<SendMessageResponse>`
 
 **Example:**
 
 ```typescript
-// Single recipient
-const result = await termii.messaging.send({
+const response = await termii.messaging.send({
   to: '2347065250817',
   from: 'YourBrand',
-  sms: 'Hello from Termii!',
+  sms: 'Hello from Termii SDK!',
   type: 'plain',
   channel: 'generic',
 });
+console.log('Message sent:', response.message_id);
+```
 
-// Multiple recipients (max 100)
-const result = await termii.messaging.send({
+#### `sendBulk(params)`
+
+Sends bulk SMS messages to multiple recipients (up to 10,000).
+
+-   **`params`**: `Omit<SendBulkMessageRequest, 'api_key'>`
+-   **Returns**: `Promise<SendBulkMessageResponse>`
+
+**Example:**
+
+```typescript
+const response = await termii.messaging.sendBulk({
   to: ['2347065250817', '2348012345678'],
   from: 'YourBrand',
-  sms: 'Hello everyone!',
+  sms: 'Bulk message to all users!',
   type: 'plain',
   channel: 'generic',
 });
 ```
 
-**Throws:**
+#### `sendWithMedia(params)`
 
-- `TermiiValidationError` - Invalid input parameters
-- `TermiiAuthenticationError` - Authentication failed
-- `TermiiAPIError` - API error response
-- `TermiiNetworkError` - Network/connection error
+Sends a message with media, primarily for WhatsApp.
 
----
-
-### `sendBulk()`
-
-Send SMS messages to multiple recipients (up to 10,000).
-
-**Signature:**
-
-```typescript
-messaging.sendBulk(params: SendBulkMessageRequest): Promise<SendBulkMessageResponse>
-```
-
-**Parameters:**
-
-| Name      | Type                               | Required | Description                                   |
-| --------- | ---------------------------------- | -------- | --------------------------------------------- |
-| `to`      | `string[]`                         | Yes      | Array of recipient phone numbers (max 10,000) |
-| `from`    | `string`                           | Yes      | Sender ID (alphanumeric, max 11 characters)   |
-| `sms`     | `string`                           | Yes      | Message content                               |
-| `type`    | `'plain' \| 'unicode'`             | Yes      | Message type                                  |
-| `channel` | `'generic' \| 'dnd' \| 'whatsapp'` | Yes      | Delivery channel                              |
-
-**Returns:** `Promise<SendBulkMessageResponse>`
-
-| Property     | Type     | Description               |
-| ------------ | -------- | ------------------------- |
-| `message_id` | `string` | Unique message identifier |
-| `message`    | `string` | Status message            |
-| `balance`    | `number` | Remaining account balance |
-| `user`       | `string` | Account username          |
+-   **`params`**: `Omit<SendMessageRequest, 'api_key' | 'sms'> & { media: Required<SendMessageRequest>['media'] }`
+-   **Returns**: `Promise<SendMessageResponse>`
 
 **Example:**
 
 ```typescript
-const recipients = [
-  '2347065250817',
-  '2348012345678',
-  '2349087654321',
-  // ... up to 10,000 numbers
-];
-
-const result = await termii.messaging.sendBulk({
-  to: recipients,
-  from: 'YourBrand',
-  sms: 'Important announcement',
-  type: 'plain',
-  channel: 'generic',
-});
-```
-
-**Throws:**
-
-- `TermiiValidationError` - Invalid input or too many recipients
-- `TermiiAuthenticationError` - Authentication failed
-- `TermiiAPIError` - API error response
-- `TermiiNetworkError` - Network/connection error
-
----
-
-### `sendWithMedia()`
-
-Send a message with media attachment via WhatsApp.
-
-**Signature:**
-
-```typescript
-messaging.sendWithMedia(params: SendWithMediaRequest): Promise<SendMessageResponse>
-```
-
-**Parameters:**
-
-| Name            | Type          | Required | Description                    |
-| --------------- | ------------- | -------- | ------------------------------ |
-| `to`            | `string`      | Yes      | Recipient phone number         |
-| `from`          | `string`      | Yes      | Sender ID                      |
-| `type`          | `'plain'`     | Yes      | Message type (must be 'plain') |
-| `channel`       | `'whatsapp'`  | Yes      | Must be 'whatsapp'             |
-| `media`         | `MediaObject` | Yes      | Media attachment               |
-| `media.url`     | `string`      | Yes      | Public URL of the media file   |
-| `media.caption` | `string`      | No       | Optional caption for the media |
-
-**Returns:** `Promise<SendMessageResponse>`
-
-**Supported Media Types:**
-
-- Images: JPG, PNG, GIF
-- Videos: MP4, 3GP
-- Documents: PDF, DOC, DOCX, XLS, XLSX
-
-**Example:**
-
-```typescript
-// Send image with caption
-const result = await termii.messaging.sendWithMedia({
+const response = await termii.messaging.sendWithMedia({
   to: '2347065250817',
   from: 'YourBrand',
   type: 'plain',
   channel: 'whatsapp',
   media: {
-    url: 'https://example.com/promo-image.jpg',
-    caption: 'Check out our latest offer!',
-  },
-});
-
-// Send document
-const result = await termii.messaging.sendWithMedia({
-  to: '2347065250817',
-  from: 'YourBrand',
-  type: 'plain',
-  channel: 'whatsapp',
-  media: {
-    url: 'https://example.com/invoice.pdf',
-    caption: 'Your invoice for June 2024',
+    url: 'https://example.com/image.jpg',
+    caption: 'Check out this amazing offer!',
   },
 });
 ```
 
-**Throws:**
+### Sender ID
 
-- `TermiiValidationError` - Invalid channel or missing media URL
-- `TermiiAuthenticationError` - Authentication failed
-- `TermiiAPIError` - API error response
-- `TermiiNetworkError` - Network/connection error
+Accessed via `termii.senderId`.
 
----
+#### `request(params)`
 
-## Sender ID
+Requests a new Sender ID for approval.
 
-Manage and request Sender IDs for branding your outbound SMS messages.
-
-### `request()`
-
-Request a new Sender ID for approval.
-
-**Signature:**
-
-```typescript
-senderId.request(params: RequestSenderIdRequest): Promise<RequestSenderIdResponse>
-```
-
-**Parameters:**
-
-| Name        | Type     | Required | Description                                                          |
-| ----------- | -------- | -------- | -------------------------------------------------------------------- |
-| `sender_id` | `string` | Yes      | The sender ID you want to register (alphanumeric, max 11 characters) |
-| `usecase`   | `string` | Yes      | Brief description of how the sender ID will be used                  |
-| `company`   | `string` | Yes      | Company or organization name                                         |
-
-**Returns:** `Promise<RequestSenderIdResponse>`
-
-| Property  | Type     | Description          |
-| --------- | -------- | -------------------- |
-| `code`    | `string` | Response status code |
-| `message` | `string` | Response message     |
+-   **`params`**: `Omit<RequestSenderIdRequest, 'api_key'>`
+-   **Returns**: `Promise<RequestSenderIdResponse>`
 
 **Example:**
 
 ```typescript
-const result = await termii.senderId.request({
+const response = await termii.senderId.request({
   sender_id: 'MyBrand',
-  usecase: 'Customer notifications and alerts',
+  useCase: 'Customer notifications and alerts',
   company: 'My Company Ltd',
 });
-
-console.log(result);
-// {
-//   code: 'ok',
-//   message: 'Sender ID request submitted successfully'
-// }
 ```
 
-**Throws:**
+#### `fetch(params)`
 
-- `TermiiValidationError` - Invalid input parameters
-- `TermiiAuthenticationError` - Authentication failed
-- `TermiiAPIError` - API error response
-- `TermiiNetworkError` - Network/connection error
+Fetches a paginated list of your Sender IDs.
 
----
-
-### `fetch()`
-
-Fetch a paginated list of Sender IDs associated with your account.
-
-**Signature:**
-
-```typescript
-senderId.fetch(params?: {
-  page?: number;
-  size?: number;
-  status?: SenderIdStatus;
-}): Promise<FetchSenderIdResponse>
-```
-
-**Parameters:**
-
-| Name     | Type             | Required | Description                                       |
-| -------- | ---------------- | -------- | ------------------------------------------------- |
-| `page`   | `number`         | No       | Page number for pagination (default 0)            |
-| `size`   | `number`         | No       | Number of items per page (default 20)             |
-| `status` | `SenderIdStatus` | No       | Filter by status (`pending`, `active`, `blocked`) |
-
-**Returns:** `Promise<FetchSenderIdResponse>`
-
-| Property        | Type              | Description                |
-| --------------- | ----------------- | -------------------------- |
-| `content`       | `SenderIdEntry[]` | List of sender ID entries  |
-| `totalElements` | `number`          | Total number of sender IDs |
-| `number`        | `number`          | Current page number        |
-| `size`          | `number`          | Page size                  |
-| `totalPages`    | `number`          | Total number of pages      |
-| `first`         | `boolean`         | True if first page         |
-| `last`          | `boolean`         | True if last page          |
+-   **`params?`**: `{ page?: number; size?: number; status?: SenderIdStatus }`
+-   **Returns**: `Promise<FetchSenderIdResponse>`
 
 **Example:**
 
 ```typescript
-// Fetch all sender IDs (first page, 20 per page)
-const result = await termii.senderId.fetch({
-  page: 0,
-  size: 20,
-});
-
-console.log(result);
-// {
-//   content: [
-//     {
-//       sender_id: 'MyBrand',
-//       status: 'pending',
-//       createdAt: '2024-01-12T10:20:30Z',
-//       country: 'NG',
-//       company: 'My Company Ltd',
-//       usecase: 'Customer notifications and alerts'
-//     }
-//   ],
-//   totalElements: 1,
-//   number: 0,
-//   size: 20,
-//   totalPages: 1,
-//   first: true,
-//   last: true
-// }
+const response = await termii.senderId.fetch({ status: 'active' });
+console.log(response.content);
 ```
 
-**Throws:**
+### Number
 
-- `TermiiValidationError` - Invalid input parameters
-- `TermiiAuthenticationError` - Authentication failed
-- `TermiiAPIError` - API error response
-- `TermiiNetworkError` - Network/connection error
+Accessed via `termii.numberMessage`.
 
----
+#### `send(params)`
 
-## Number
+Sends a message using Termii's auto-generated messaging numbers.
 
-This API allows businesses send messages to customers using Termii's auto-generated messaging numbers that adapt to customers location.
-
-### `send()`
-
-Send a message to a phone number.
-
-**Signature:**
-
-```typescript
-numberMessage.send(params: SendNumberMessageRequest): Promise<SendNumberMessageResponse>
-```
-
-**Parameters:**
-
-| Name   | Type      | Required | Description                                                          |
-| ------ | --------- | -------- | -------------------------------------------------------------------- |
-| `to`   | `string`  | Yes      | Recipient phone number in international format (e.g., 2347065250817) |
-| `sms`  | `string`  | Yes      | Message content                                                      |
-| `type` | `'plain'` | No       | Message type (default `'plain'`)                                     |
-
-**Returns:** `Promise<SendNumberMessageResponse>`
-
-| Property     | Type     | Description               |
-| ------------ | -------- | ------------------------- |
-| `code`       | `string` | Response status code      |
-| `message_id` | `string` | Unique message identifier |
-| `message`    | `string` | Status message            |
-| `balance`    | `number` | Remaining account balance |
-| `user`       | `string` | Account username          |
+-   **`params`**: `Omit<SendNumberMessageRequest, 'api_key'>`
+-   **Returns**: `Promise<SendNumberMessageResponse>`
 
 **Example:**
 
 ```typescript
-// Single recipient
-const result = await termii.numberMessage.send({
+const response = await termii.numberMessage.send({
   to: '2347065250817',
   sms: 'Hello from Termii Number API!',
-  type: 'plain',
 });
 ```
 
-**Throws:**
+### Templates
 
-- `TermiiValidationError` - Invalid input parameters
-- `TermiiAuthenticationError` - Authentication failed
-- `TermiiAPIError` - API error response
-- `TermiiNetworkError` - Network/connection error
+Accessed via `termii.templateMessage`.
 
----
+#### `send(params)`
 
-## Templates
+Sends a pre-approved message template.
 
-Send predefined and approved message templates through Termii. Templates allow structured messaging with dynamic variables, ensuring consistency and compliance across customer communications. Templates may also include optional media attachments for richer messaging experiences.
-
----
-
-### `sendTemplate()`
-
-Send a template message **without** media.
-
-**Signature:**
-
-```typescript
-templateMessage.sendTemplate(params: SendTemplateRequest): Promise<SendTemplateResponse>
-```
-
-**Parameters:**
-
-| Name           | Type                  | Required | Description                                      |
-| -------------- | --------------------- | -------- | ------------------------------------------------ |
-| `phone_number` | `string`              | Yes      | Recipient's phone number in international format |
-| `device_id`    | `string`              | Yes      | Device ID associated with your Termii account    |
-| `template_id`  | `string`              | Yes      | Template identifier from your Termii dashboard   |
-| `data`         | `Record<string, any>` | Yes      | Dynamic fields required by the template          |
-
-**Returns:** `Promise<SendTemplateResponse>`
-
-| Property     | Type     | Description                      |
-| ------------ | -------- | -------------------------------- |
-| `message_id` | `string` | Unique ID for the sent message   |
-| `status`     | `string` | Message delivery status          |
-| `message`    | `string` | Description of the API result    |
-| `balance`    | `number` | Remaining Termii account balance |
-| `user`       | `string` | Your Termii username             |
+-   **`params`**: `Omit<SendTemplateRequest, 'api_key'>`
+-   **Returns**: `Promise<SendTemplateResponse>`
 
 **Example:**
 
 ```typescript
-const result = await termii.templateMessage.sendTemplate({
+const response = await termii.templateMessage.send({
   phone_number: '2347065250817',
-  device_id: 'DEV_001',
-  template_id: 'TMP_2001',
+  device_id: 'YOUR_DEVICE_ID',
+  template_id: 'TEMPLATE_ID_123',
   data: {
     first_name: 'John',
     code: '48291',
@@ -501,725 +211,225 @@ const result = await termii.templateMessage.sendTemplate({
 });
 ```
 
-**Throws:**
+### Phonebook
 
-- `TermiiValidationError` - Missing required fields or invalid phone number
-- `TermiiAuthenticationError` - Invalid API key or unauthorized access
-- `TermiiAPIError` - Termii API returned an error response
-- `TermiiNetworkError` - Network or connectivity issue
+Accessed via `termii.phonebook`.
 
----
+#### `fetchAll()`
 
-### `sendTemplateWithMedia()`
+Retrieves all existing phonebooks on your account.
 
-Send a template message with media, such as images, videos, or documents.
-
-**Signature:**
-
-```typescript
-templateMessage.sendTemplateWithMedia(params: SendTemplateWithMediaRequest): Promise<SendTemplateResponse>
-```
-
-**Parameters:**
-
-| Name            | Type                  | Required | Description                        |
-| --------------- | --------------------- | -------- | ---------------------------------- |
-| `phone_number`  | `string`              | Yes      | Recipient's phone number           |
-| `device_id`     | `string`              | Yes      | Device ID tied to your account     |
-| `template_id`   | `string`              | Yes      | Approved Termii template ID        |
-| `data`          | `Record<string, any>` | Yes      | Template variable values           |
-| `media`         | `MediaObject`         | Yes      | Media payload (URL + caption)      |
-| `media.url`     | `string`              | Yes      | URL pointing to the media file     |
-| `media.caption` | `string`              | Yes      | Caption that accompanies the media |
-
-**Returns:** `Promise<SendTemplateResponse>`
-
-Same return structure as `sendTemplate()`.
-
-**Supported Media Types:**
-
-| Category  | Types          |
-| --------- | -------------- |
-| Images    | JPG, JPEG, PNG |
-| Documents | PDF, DOC, DOCX |
-| Videos    | MP4, 3GP       |
-
-Media must be hosted on a publicly accessible URL.
-
-**Example:**
-
-```typescript
-const result = await termii.templateMessage.sendTemplateWithMedia({
-  phone_number: '2348098765432',
-  device_id: 'DEV_002',
-  template_id: 'TMP_3002',
-  data: {
-    customer_name: 'Mary',
-    invoice_number: 'INV-9033',
-  },
-  media: {
-    url: 'https://example.com/invoice.pdf',
-    caption: 'Invoice INV-9033',
-  },
-});
-```
-
-**Throws:**
-
-- `TermiiValidationError` - Missing media, invalid template data, or missing required arguments
-- `TermiiAuthenticationError` - API key invalid or unauthorized
-- `TermiiAPIError` - Error response returned from Termii servers
-- `TermiiNetworkError` - Connection issue or timeout
-
----
-
-### Template Data Requirements
-
-Each template in your Termii dashboard defines required variables. Your request must include all variables in the `data` object.
-
-**Example Template:**
-
-```
-Hello {{first_name}}, your verification code is {{code}}.
-```
-
-**Matching Request Body:**
-
-```json
-{
-  "first_name": "John",
-  "code": "48291"
-}
-```
-
----
-
-### When to Use Templates
-
-Templates are ideal for:
-
-- OTP / Verification codes
-- Payment confirmations
-- Delivery updates
-- Account activity alerts
-- Automated WhatsApp messages
-- Invoice and document delivery
-- Transaction updates
-
-Templates ensure brand consistency and reduce message composition errors.
-
----
-
-### Notes
-
-- Templates must be created and approved in the Termii dashboard.
-- Only approved templates can be sent.
-- Dynamic fields are validated by Termii; missing fields will cause an error.
-- Media messages may incur higher routing costs depending on channel support.
-
----
-
-### Example Use Cases
-
-**Verification Code Message:**
-
-```typescript
-await termii.templateMessage.sendTemplate({
-  phone_number: '2348012345678',
-  device_id: 'DEV_992',
-  template_id: 'VERIFY_101',
-  data: { name: 'Samuel', code: '55221' },
-});
-```
-
-**Invoice Delivery With Media:**
-
-```typescript
-await termii.templateMessage.sendTemplateWithMedia({
-  phone_number: '2348098765432',
-  device_id: 'DEV_992',
-  template_id: 'INV_300',
-  data: { customer_name: 'Mary', invoice_number: 'INV-9033' },
-  media: {
-    url: 'https://example.com/invoice.pdf',
-    caption: 'Your Invoice INV-9033',
-  },
-});
-```
-
-Templates offer a reliable, scalable way to automate structured communication while ensuring message consistency and approval compliance.
-
-## Phonebook
-
-Manage and organize customer groups for messaging and segmentation. The Phonebook API lets you **create**, **list**, **update**, and **delete** phonebooks on your Termii account.
-
----
-
-### `fetchAll()`
-
-Retrieve all phonebooks created on your Termii account.
-
-**Signature:**
-
-```typescript
-phonebook.fetchAll(): Promise<FetchPhonebooksResponse>
-```
-
-**Returns:** `Promise<FetchPhonebooksResponse>`
-
-| Property        | Type               | Description                        |
-| --------------- | ------------------ | ---------------------------------- |
-| `content`       | `PhonebookEntry[]` | List of phonebooks                 |
-| `pageable`      | `Pageable`         | Pagination metadata                |
-| `totalPages`    | `number`           | Total pages                        |
-| `totalElements` | `number`           | Total number of phonebooks         |
-| `size`          | `number`           | Page size                          |
-| `number`        | `number`           | Current page index                 |
-| `empty`         | `boolean`          | Indicates if page contains no data |
+-   **Returns**: `Promise<FetchPhonebooksResponse>`
 
 **Example:**
 
 ```typescript
 const phonebooks = await termii.phonebook.fetchAll();
-// phonebooks.content[0] = {
-//   id: "c3d32e8b-22f2-4dfb-af45-84a1cb8916fb",
-//   name: "Customers",
-//   total_number_of_contacts: 420,
-//   date_created: "2023-08-10T12:45:00Z"
-// }
+console.log(phonebooks.content);
 ```
 
-**Throws:**
+#### `create(params)`
 
-- `TermiiAuthenticationError` - Authentication failed
-- `TermiiAPIError` - API error response
-- `TermiiNetworkError` - Network/connection error
+Creates a new phonebook.
 
----
-
-### `create()`
-
-Create a new phonebook for storing contacts.
-
-**Signature:**
-
-```typescript
-phonebook.create(params: CreatePhonebookRequest): Promise<CreatePhonebookResponse>
-```
-
-**Parameters:**
-
-| Name             | Type     | Required | Description                    |
-| ---------------- | -------- | -------- | ------------------------------ |
-| `phonebook_name` | `string` | Yes      | Name of the phonebook          |
-| `description`    | `string` | No       | Optional phonebook description |
-
-**Returns:** `Promise<CreatePhonebookResponse>`
-
-| Property  | Type     | Description      |
-| --------- | -------- | ---------------- |
-| `message` | `string` | Status message   |
-| `status`  | `string` | Operation result |
+-   **`params`**: `CreatePhonebookRequest`
+-   **Returns**: `Promise<CreatePhonebookResponse>`
 
 **Example:**
 
 ```typescript
-const result = await termii.phonebook.create({
+const response = await termii.phonebook.create({
   phonebook_name: 'VIP Customers',
-  description: 'High-value customers',
+  description: 'High value customers',
 });
-// {
-//   message: "Phonebook created successfully",
-//   status: "success"
-// }
 ```
 
-**Throws:**
+#### `update(phonebook_id, params)`
 
-- `TermiiValidationError` - Missing required fields
-- `TermiiAuthenticationError` - Authentication failed
-- `TermiiAPIError` - API error response
+Modifies an existing phonebook.
 
----
-
-### `update()`
-
-Update an existing phonebook's name or description.
-
-**Signature:**
-
-```typescript
-phonebook.update(id: string, params: UpdatePhonebookRequest): Promise<UpdatePhonebookResponse>
-```
-
-**Parameters:**
-
-| Name             | Type     | Required | Description            |
-| ---------------- | -------- | -------- | ---------------------- |
-| `phonebook_name` | `string` | Yes      | Updated phonebook name |
-| `description`    | `string` | Yes      | Updated description    |
-
-**Returns:** `Promise<UpdatePhonebookResponse>`
-
-| Property           | Type      | Description                   |
-| ------------------ | --------- | ----------------------------- |
-| `id`               | `string`  | Phonebook ID                  |
-| `name`             | `string`  | Updated name                  |
-| `description`      | `string`  | Updated description           |
-| `numberOfContacts` | `number`  | Count of contacts             |
-| `temp`             | `boolean` | Indicates temporary phonebook |
-| `createdAt`        | `string`  | Timestamp                     |
-| `updatedAt`        | `string`  | Timestamp                     |
+-   **`phonebook_id`**: `string`
+-   **`params`**: `UpdatePhonebookRequest`
+-   **Returns**: `Promise<UpdatePhonebookResponse>`
 
 **Example:**
 
 ```typescript
-const updated = await termii.phonebook.update('pb_123', {
-  phonebook_name: 'Engaged Leads',
-  description: 'Contacts who frequently interact',
+const response = await termii.phonebook.update('phonebook-id-123', {
+  phonebook_name: 'VIP Clients',
+  description: 'Premium clients',
 });
 ```
 
-**Throws:**
+#### `delete(phonebook_id)`
 
-- `TermiiValidationError` - Invalid input parameters
-- `TermiiAuthenticationError` - Authentication failed
-- `TermiiAPIError` - API error response
+Removes a phonebook permanently.
 
----
-
-### `delete()`
-
-Delete a phonebook by ID.
-
-**Signature:**
-
-```typescript
-phonebook.delete(id: string): Promise<DeletePhonebookResponse>
-```
-
-**Returns:** `Promise<DeletePhonebookResponse>`
-
-| Property  | Type     | Description                |
-| --------- | -------- | -------------------------- |
-| `message` | `string` | Status confirming deletion |
+-   **`phonebook_id`**: `string`
+-   **Returns**: `Promise<DeletePhonebookResponse>`
 
 **Example:**
 
 ```typescript
-await termii.phonebook.delete('pb_12345');
-// {
-//   message: "Phonebook deleted successfully"
-// }
+await termii.phonebook.delete('phonebook-id-123');
 ```
 
-**Throws:**
+### Contacts
 
-- `TermiiAuthenticationError` - Authentication failed
-- `TermiiAPIError` - API error response
+Accessed via `termii.contact`.
 
----
+#### `fetch(phonebook_id)`
 
-### Notes and Behavior
+Retrieves all contacts in a specific phonebook.
 
-- Termii phonebooks help you segment users for targeted communication.
-- Fetch endpoint returns full pagination metadata.
-- Deleting a phonebook does not delete the contacts themselves unless removed separately.
-- Phonebook IDs are UUIDs.
-- Creating or updating a phonebook requires minimal fields, making it easily automatable.
+-   **`phonebook_id`**: `string`
+-   **Returns**: `Promise<FetchContactsResponse>`
 
----
-
-## Types
-
-### Core Types
+**Example:**
 
 ```typescript
-interface TermiiConfig {
-  apiKey: string;
-  baseUrl?: string;
-  timeout?: number;
-  retries?: number;
-  validateInput?: boolean;
-  logger?: Logger;
-}
-
-interface Logger {
-  debug(message: string, meta?: any): void;
-  info(message: string, meta?: any): void;
-  warn(message: string, meta?: any): void;
-  error(message: string, meta?: any): void;
-}
+const contacts = await termii.contact.fetch('phonebook-id-123');
+console.log(contacts.content);
 ```
 
-### Messaging Types
+#### `addSingle(params)`
+
+Adds a single contact to a phonebook.
+
+-   **`params`**: `AddSingleContactRequest`
+-   **Returns**: `Promise<AddSingleContactResponse>`
+
+**Example:**
 
 ```typescript
-interface SendMessageRequest {
-  to: string | string[];
-  from: string;
-  sms: string;
-  type: 'plain' | 'unicode';
-  channel: 'generic' | 'dnd' | 'whatsapp';
-  media?: MediaObject;
-}
-
-interface SendBulkMessageRequest {
-  to: string[];
-  from: string;
-  sms: string;
-  type: 'plain' | 'unicode';
-  channel: 'generic' | 'dnd' | 'whatsapp';
-}
-
-interface SendMessageResponse {
-  message_id: string;
-  message: string;
-  balance: number;
-  user: string;
-}
-
-interface SendBulkMessageResponse {
-  message_id: string;
-  message: string;
-  balance: number;
-  user: string;
-}
-
-interface MediaObject {
-  url: string;
-  caption?: string;
-}
-```
-
----
-
-## Contacts
-
-## Campaign
-
-Create, schedule, personalize, resend, and manage SMS campaigns through Termii's Campaign API. Campaigns allow you to broadcast messages to large audiences grouped in phonebooks, with support for scheduled delivery and retrying failed sends.
-
----
-
-### `send()` <a id="send-campaign"></a>
-
-Create and send a new SMS campaign. Supports **regular**, **personalized**, and **scheduled** campaigns.
-
-**Signature:**
-
-```typescript
-campaign.send(params: SendCampaignRequest): Promise<SendCampaignResponse>
-```
-
-**Parameters:**
-
-| Name                  | Type                                                        | Required | Description                                                   |
-| --------------------- | ----------------------------------------------------------- | -------- | ------------------------------------------------------------- |
-| `country_code`        | `string`                                                    | Yes      | Country code of recipients (e.g., "NG")                       |
-| `sender_id`           | `string`                                                    | Yes      | Sender ID registered on Termii                                |
-| `message`             | `string`                                                    | Yes      | SMS content                                                   |
-| `channel`             | `'generic' \| 'dnd'`                                        | Yes      | SMS route used for delivery                                   |
-| `phonebook_id`        | `string`                                                    | Yes      | Unique ID of the phonebook containing recipients              |
-| `message_type`        | `'plain' \| 'unicode'`                                      | Yes      | Type of message content                                       |
-| `campaign_type`       | `'personalised' \| 'customised'`                            | Yes      | Determines if messages use unique fields for each contact     |
-| `schedule_sms_status` | `'scheduled' \| 'non_scheduled'`                            | Yes      | Whether the campaign is scheduled                             |
-| `schedule_time`       | `string`                                                    | No       | ISO timestamp for scheduled sending (required when scheduled) |
-| `recipient`           | `{ phone_number: string; field: Record<string, string> }[]` | No       | Required for personalised campaigns                           |
-
-**Returns:** `Promise<SendCampaignResponse>`
-
-| Property     | Type     | Description                       |
-| ------------ | -------- | --------------------------------- |
-| `code`       | `string` | API response code                 |
-| `message`    | `string` | Status message                    |
-| `balance`    | `number` | Remaining account balance         |
-| `user`       | `string` | Username tied to the account      |
-| `message_id` | `string` | Unique ID of the created campaign |
-
-**Example (Regular Campaign):**
-
-```typescript
-const result = await termii.campaign.send({
-  country_code: 'NG',
-  sender_id: 'YourBrand',
-  message: 'Promo starts today!',
-  channel: 'generic',
-  phonebook_id: 'pb_10293',
-  message_type: 'plain',
-  campaign_type: 'customised',
-  schedule_sms_status: 'non_scheduled',
+const newContact = await termii.contact.addSingle({
+  pid: 'phonebook-id-123',
+  phone_number: '2348012345678',
+  first_name: 'John',
 });
-
-console.log(result);
 ```
 
-**Example (Personalised Campaign):**
+#### `addMultiple(params)`
+
+Adds multiple contacts to a phonebook in a single request.
+
+-   **`params`**: `AddMultipleContactsRequest`
+-   **Returns**: `Promise<AddMultipleContactsResponse>`
+
+**Example:**
 
 ```typescript
-const result = await termii.campaign.send({
-  country_code: 'NG',
-  sender_id: 'YourBrand',
-  message: 'Hello {{name}}, your code is {{code}}',
-  channel: 'generic',
-  phonebook_id: 'pb_90901',
-  message_type: 'plain',
-  campaign_type: 'personalised',
-  schedule_sms_status: 'non_scheduled',
-  recipient: [
-    { phone_number: '2348012345678', field: { name: 'John', code: '1122' } },
-    { phone_number: '2349087654321', field: { name: 'Mary', code: '3344' } },
+const response = await termii.contact.addMultiple({
+  pid: 'phonebook-id-123',
+  contacts: [
+    { phone_number: '2348012345678', first_name: 'John' },
+    { phone_number: '2349087654321', first_name: 'Jane' },
   ],
 });
 ```
 
-**Example (Scheduled Campaign):**
+#### `delete(id)`
+
+Deletes a specific contact.
+
+-   **`id`**: `string` - The ID of the contact to delete.
+-   **Returns**: `Promise<DeleteContactResponse>`
+
+**Example:**
 
 ```typescript
-await termii.campaign.send({
-  country_code: 'NG',
+await termii.contact.delete('contact-id-123');
+```
+
+### Campaigns
+
+Accessed via `termii.campaign`.
+
+#### `send(params)`
+
+Sends a new campaign.
+
+-   **`params`**: `SendCampaignRequest`
+-   **Returns**: `Promise<SendCampaignResponse>`
+
+**Example:**
+
+```typescript
+const response = await termii.campaign.send({
+  country_code: '234',
   sender_id: 'YourBrand',
-  message: "Don't miss our event tomorrow!",
-  channel: 'dnd',
-  phonebook_id: 'pb_48484',
+  message: 'Hello customers, enjoy 20% off this week!',
+  channel: 'generic',
   message_type: 'plain',
-  campaign_type: 'customised',
-  schedule_sms_status: 'scheduled',
-  schedule_time: '2025-02-15T10:00:00Z',
+  phonebook_id: 'phonebook-id-123',
+  campaign_type: 'regular',
+  schedule_sms_status: 'regular',
 });
 ```
 
-**Throws:**
+#### `fetchAll()`
 
-- `TermiiValidationError` - Missing required fields or invalid scheduling rules
-- `TermiiAuthenticationError` - Invalid or missing API key
-- `TermiiAPIError` - Server returned an error
-- `TermiiNetworkError` - Failed to connect to Termii API
+Retrieves all campaigns.
 
----
-
-### `fetchAll()` <a id="fetch-all-campaign"></a>
-
-Fetch all campaigns created under your Termii account.
-
-**Signature:**
-
-```typescript
-campaign.fetchAll(): Promise<FetchCampaignsResponse>
-```
-
-**Returns:** `Promise<FetchCampaignsResponse>`
-
-| Property      | Type                | Description             |
-| ------------- | ------------------- | ----------------------- |
-| `page`        | `number`            | Current pagination page |
-| `total_pages` | `number`            | Total available pages   |
-| `data`        | `CampaignSummary[]` | Array of campaigns      |
+-   **Returns**: `Promise<FetchCampaignsResponse>`
 
 **Example:**
 
 ```typescript
-const list = await termii.campaign.fetchAll();
-console.log(list.data);
+const campaigns = await termii.campaign.fetchAll();
+console.log(campaigns.content);
 ```
 
-**Throws:**
+#### `history(campaign_id)`
 
-- `TermiiAuthenticationError` - Authentication failed
-- `TermiiAPIError` - API error response
-- `TermiiNetworkError` - Network/connection error
+Retrieves detailed history for a specific campaign.
 
----
-
-### `history()` <a id="history-campaign"></a>
-
-Retrieve delivery history for a specific campaign.
-
-**Signature:**
-
-```typescript
-campaign.history(campaignId: string): Promise<CampaignHistoryResponse>
-```
-
-**Parameters:**
-
-| Name         | Type     | Required | Description        |
-| ------------ | -------- | -------- | ------------------ |
-| `campaignId` | `string` | Yes      | Unique campaign ID |
-
-**Returns:** `Promise<CampaignHistoryResponse>`
-
-| Property      | Type                         | Description                      |
-| ------------- | ---------------------------- | -------------------------------- |
-| `campaign_id` | `string`                     | Campaign identifier              |
-| `total_sent`  | `number`                     | Number of messages attempted     |
-| `delivered`   | `number`                     | Successfully delivered messages  |
-| `failed`      | `number`                     | Failed message count             |
-| `pending`     | `number`                     | Messages still awaiting delivery |
-| `recipients`  | `CampaignHistoryRecipient[]` | Detailed per-recipient status    |
+-   **`campaign_id`**: `string`
+-   **Returns**: `Promise<FetchCampaignHistoryResponse>`
 
 **Example:**
 
 ```typescript
-const result = await termii.campaign.history('cmp_12345');
-console.log(result.delivered, result.failed);
+const history = await termii.campaign.history('campaign-id-123');
 ```
 
-**Throws:**
+#### `retry(campaign_id)`
 
-- `TermiiValidationError` - Invalid campaign ID
-- `TermiiAuthenticationError` - Authentication failed
-- `TermiiAPIError` - API error response
-- `TermiiNetworkError` - Network/connection error
+Retries sending a failed or incomplete campaign.
 
----
-
-### `retry()` <a id="retry-campaign"></a>
-
-Retry sending a failed or incomplete campaign.
-
-**Signature:**
-
-```typescript
-campaign.retry(campaignId: string): Promise<RetryCampaignResponse>
-```
-
-**Parameters:**
-
-| Name         | Type     | Required | Description          |
-| ------------ | -------- | -------- | -------------------- |
-| `campaignId` | `string` | Yes      | Campaign ID to retry |
-
-**Returns:** `Promise<RetryCampaignResponse>`
-
-| Property      | Type     | Description                   |
-| ------------- | -------- | ----------------------------- |
-| `message`     | `string` | Status of the retry operation |
-| `campaign_id` | `string` | ID of retried campaign        |
+-   **`campaign_id`**: `string`
+-   **Returns**: `Promise<RetryCampaignResponse>`
 
 **Example:**
 
 ```typescript
-await termii.campaign.retry('cmp_98765');
+await termii.campaign.retry('campaign-id-123');
 ```
-
-**Throws:**
-
-- `TermiiValidationError` - Campaign ID missing
-- `TermiiAuthenticationError` - API key invalid
-- `TermiiAPIError` - Retry operation failed
-- `TermiiNetworkError` - Connection issues
 
 ---
 
 ## Error Handling
 
-All errors extend from the base `TermiiError` class.
+The SDK throws specific error classes for different scenarios, all extending from a base `TermiiError`.
 
-### Error Classes
+-   **`TermiiValidationError`**: For invalid input parameters.
+-   **`TermiiAuthenticationError`**: For authentication failures (e.g., invalid API key).
+-   **`TermiiRateLimitError`**: For when the API rate limit is exceeded.
+-   **`TermiiAPIError`**: For general errors returned by the Termii API.
+-   **`TermiiNetworkError`**: For network or connection issues.
 
-#### `TermiiValidationError`
-
-Thrown when input validation fails.
+**Example:**
 
 ```typescript
+import { TermiiClient, TermiiValidationError } from 'termii-node';
+
 try {
-  await termii.messaging.send({
-    /* invalid params */
-  });
+  // ... API call
 } catch (error) {
   if (error instanceof TermiiValidationError) {
     console.error('Validation failed:', error.message);
+  } else {
+    console.error('An unexpected error occurred:', error);
   }
 }
 ```
-
-#### `TermiiAuthenticationError`
-
-Thrown for authentication failures (HTTP 401, 403).
-
-```typescript
-try {
-  await termii.messaging.send(params);
-} catch (error) {
-  if (error instanceof TermiiAuthenticationError) {
-    console.error('Invalid API key:', error.message);
-  }
-}
-```
-
-#### `TermiiRateLimitError`
-
-Thrown when rate limit is exceeded (HTTP 429).
-
-```typescript
-try {
-  await termii.messaging.send(params);
-} catch (error) {
-  if (error instanceof TermiiRateLimitError) {
-    console.error('Rate limit exceeded. Retry after:', error.retryAfter);
-  }
-}
-```
-
-#### `TermiiAPIError`
-
-Thrown for API errors (HTTP 4xx, 5xx).
-
-```typescript
-try {
-  await termii.messaging.send(params);
-} catch (error) {
-  if (error instanceof TermiiAPIError) {
-    console.error('API error:', error.message);
-    console.error('Status code:', error.statusCode);
-    console.error('Response:', error.response);
-  }
-}
-```
-
-#### `TermiiNetworkError`
-
-Thrown for network/connection errors.
-
-```typescript
-try {
-  await termii.messaging.send(params);
-} catch (error) {
-  if (error instanceof TermiiNetworkError) {
-    console.error('Network error:', error.message);
-  }
-}
-```
-
----
-
-## Rate Limits
-
-Termii enforces rate limits on API requests:
-
-- **Default**: 100 requests per minute
-- **Burst**: Up to 200 requests per minute for short periods
-
-The SDK automatically retries failed requests with exponential backoff.
-
----
-
-## Best Practices
-
-1. **Use Environment Variables**: Store API keys securely
-2. **Handle Errors Gracefully**: Implement proper error handling
-3. **Validate Phone Numbers**: Ensure numbers are in international format
-4. **Use Bulk Methods**: For sending to multiple recipients
-5. **Monitor Balance**: Check your balance regularly
-6. **Test in Staging**: Test with test credentials before production
-
----
-
-## Support
-
-For questions or issues:
-
-- 📧 Email: basil@gmail.com
-- 💬 Issues: [GitHub Issues](https://github.com/basil4240/termii-node/issues)
-- 🌐 Termii Docs: [https://developers.termii.com](https://developers.termii.com)

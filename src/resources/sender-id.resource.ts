@@ -25,7 +25,7 @@ export class SenderIdResource extends BaseResource {
     this.validateFetchParams(params);
 
     // Build query params
-    const query: Record<string, any> = {
+    const query: Record<string, string | number> = {
       api_key: this.apiKey,
     };
 
@@ -101,7 +101,7 @@ export class SenderIdResource extends BaseResource {
 
     if (
       params.status !== undefined &&
-      !Object.values(SENDER_ID_STATUS).includes(params.status as any)
+      !Object.values(SENDER_ID_STATUS).includes(params.status as SenderIdStatus)
     ) {
       throw new TermiiValidationError(
         `Invalid status. Must be one of: ${Object.values(SENDER_ID_STATUS).join(', ')}`

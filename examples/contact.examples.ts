@@ -19,6 +19,7 @@ const termii = new TermiiClient({
 
 // ============================================================================
 // Example 1: Fetch contacts by phonebook ID
+// NOTE: Replace '691dfb5d36e83f18898bd72e' with a valid phonebook ID from your Termii account.
 // ============================================================================
 async function fetchContact() {
   try {
@@ -50,7 +51,8 @@ async function fetchContact() {
 }
 
 // ============================================================================
-// Example 2: Create Phonebook
+// Example 2: Add Single Contact
+// NOTE: Replace '691dfb5d36e83f18898bd72e' with a valid phonebook ID.
 // ============================================================================
 async function addSingleContact() {
   try {
@@ -90,13 +92,16 @@ async function addSingleContact() {
 }
 
 // ============================================================================
-// Example 3: Update Phonebook
+// Example 3: Add Multiple Contacts (Bulk From File)
+// NOTE: Handling file uploads in a Node.js CLI example requires specific setup (e.g., FormData with Blob/File).
+// This example is commented out for now.
 // ============================================================================
-async function addMultipleContact() {
+async function addMultipleBulkFromFile() {
+  /*
   try {
-    const result = await termii.contact.addMultipleBulk({
-      file: path.join(__dirname, 'sample-contacts.csv'),
-      pid: '691dfb5d36e83f18898bd72e',
+    const result = await termii.contact.addMultipleBulkF({
+      file: path.join(__dirname, 'sample-contacts.csv'), // This expects a File/Blob object
+      pid: '691dfb5d36e83f18898bd72e', // NOTE: Replace with a valid phonebook ID.
       country_code: '234',
     });
 
@@ -123,10 +128,13 @@ async function addMultipleContact() {
       console.error('Unexpected error:', error);
     }
   }
+  */
+  console.log('addMultipleBulkFromFile example commented out due to file upload complexity.');
 }
 
 // ============================================================================
-// Example 4: Delete Phonebook
+// Example 4: Delete Contact
+// NOTE: Replace '691dfb5d36e83f18898bd72e' with a valid contact ID.
 // ============================================================================
 async function deleteContact() {
   try {
@@ -159,8 +167,8 @@ async function deleteContact() {
 
 // Run examples
 (async () => {
-  await fetchContact();
-  await addSingleContact();
-  await addMultipleContact();
-  await deleteContact();
+  await fetchContact(); // NOTE: Replace '691dfb5d36e83f18898bd72e' with a valid phonebook ID.
+  await addSingleContact(); // NOTE: Replace '691dfb5d36e83f18898bd72e' with a valid phonebook ID, and ensure phone_number is unique.
+  await addMultipleBulkFromFile();
+  await deleteContact(); // NOTE: Replace '691dfb5d36e83f18898bd72e' with a valid contact ID.
 })();

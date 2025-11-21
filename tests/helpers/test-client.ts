@@ -25,6 +25,7 @@ export function createTestHTTPClient(
   const httpClient = new HTTPClient(baseURL, 30000, 3, undefined);
 
   // Replace the internal client with our mocked one
+
   (httpClient as any).client = axiosInstance;
 
   return { httpClient, mockAxios, axiosInstance };

@@ -17,28 +17,28 @@ export abstract class BaseResource {
   /**
    * Log debug message
    */
-  protected debug(message: string, ...args: any[]): void {
+  protected debug(message: string, ...args: unknown[]): void {
     this.logger?.debug(`[${this.constructor.name}] ${message}`, ...args);
   }
 
   /**
    * Log info message
    */
-  protected info(message: string, ...args: any[]): void {
+  protected info(message: string, ...args: unknown[]): void {
     this.logger?.info(`[${this.constructor.name}] ${message}`, ...args);
   }
 
   /**
    * Log warning message
    */
-  protected warn(message: string, ...args: any[]): void {
+  protected warn(message: string, ...args: unknown[]): void {
     this.logger?.warn(`[${this.constructor.name}] ${message}`, ...args);
   }
 
   /**
    * Log error message
    */
-  protected error(message: string, ...args: any[]): void {
+  protected error(message: string, ...args: unknown[]): void {
     this.logger?.error(`[${this.constructor.name}] ${message}`, ...args);
   }
 }
