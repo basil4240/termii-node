@@ -116,37 +116,37 @@ export class MessagingResource extends BaseResource {
   async sendWithMedia(
     params: Omit<SendMessageRequest, 'api_key' | 'sms'> & {
       media: Required<SendMessageRequest>['media'];
-    },
+    }
   ): Promise<SendMessageResponse> {
     this.debug('Sending message with media', params);
 
-      // Validate that channel is WhatsApp
-      if (params.channel !== CHANNELS.WHATSAPP) {
-        throw new TermiiValidationError('Media messages are only supported on WhatsApp channel');
-      }
+    // Validate that channel is WhatsApp
+    if (params.channel !== CHANNELS.WHATSAPP) {
+      throw new TermiiValidationError('Media messages are only supported on WhatsApp channel');
+    }
 
-      // Validate media object
-      if (!params.media || !params.media.url) {
-        throw new TermiiValidationError('Media URL is required');
-      }
+    // Validate media object
+    if (!params.media || !params.media.url) {
+      throw new TermiiValidationError('Media URL is required');
+    }
 
-      // Validate inputs (excluding sms since we're using media)
-      this.validateSendRequest(params as any, true);
+    // Validate inputs (excluding sms since we're using media)
+    this.validateSendRequest(params as any, true);
 
-      // Prepare request payload
-      const payload: SendMessageRequest = {
-        ...params,
-        api_key: this.apiKey,
-      };
+    // Prepare request payload
+    const payload: SendMessageRequest = {
+      ...params,
+      api_key: this.apiKey,
+    };
 
-      // Send request
-      const response = await this.http.post<SendMessageResponse>(this.SEND_ENDPOINT, payload);
+    // Send request
+    const response = await this.http.post<SendMessageResponse>(this.SEND_ENDPOINT, payload);
 
-      this.info('Media message sent successfully', {
-        message_id: response.data.message_id,
-      });
+    this.info('Media message sent successfully', {
+      message_id: response.data.message_id,
+    });
 
-      return response.data;
+    return response.data;
   }
 
   /**

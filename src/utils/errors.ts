@@ -12,7 +12,10 @@ export class TermiiError extends Error {
 }
 
 export class TermiiAuthenticationError extends TermiiError {
-  constructor(message: string = 'Authentication failed. Please check your API key.', details?: any) {
+  constructor(
+    message: string = 'Authentication failed. Please check your API key.',
+    details?: any
+  ) {
     super(message, 401, 'AUTHENTICATION_ERROR', details);
     this.name = 'TermiiAuthenticationError';
     Object.setPrototypeOf(this, TermiiAuthenticationError.prototype);
@@ -36,7 +39,10 @@ export class TermiiRateLimitError extends TermiiError {
 }
 
 export class TermiiNetworkError extends TermiiError {
-  constructor(message: string = 'Network request failed. Please check your connection.', details?: any) {
+  constructor(
+    message: string = 'Network request failed. Please check your connection.',
+    details?: any
+  ) {
     super(message, undefined, 'NETWORK_ERROR', details);
     this.name = 'TermiiNetworkError';
     Object.setPrototypeOf(this, TermiiNetworkError.prototype);

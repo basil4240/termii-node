@@ -4,4 +4,4 @@ export const CHANNELS = {
   WHATSAPP: 'whatsapp',
 } as const;
 
-export type Channel = typeof CHANNELS[keyof typeof CHANNELS];
+export type Channel = (typeof CHANNELS)[keyof typeof CHANNELS];

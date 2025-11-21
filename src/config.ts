@@ -10,5 +10,5 @@ export const API_VERSION = 'v1';
 export const DEFAULT_HEADERS = {
   // 'Content-Type': 'application/json',
   // 'Accept': 'application/json',
-  'Accept-Encoding': 'gzip, deflate'
+  'Accept-Encoding': 'gzip, deflate',
 } as const;

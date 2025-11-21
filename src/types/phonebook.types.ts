@@ -1,4 +1,4 @@
-import { Pageable, SortInfo } from "./common.types";
+import { Pageable, SortInfo } from './common.types';
 
 /** A phonebook record */
 export interface PhonebookEntry {

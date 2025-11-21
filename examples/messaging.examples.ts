@@ -1,4 +1,14 @@
-import { TermiiClient, CHANNELS, MESSAGE_TYPES, ConsoleLogger, TermiiValidationError, TermiiAuthenticationError, TermiiRateLimitError, TermiiAPIError, TermiiNetworkError } from '../src';
+import {
+  TermiiClient,
+  CHANNELS,
+  MESSAGE_TYPES,
+  ConsoleLogger,
+  TermiiValidationError,
+  TermiiAuthenticationError,
+  TermiiRateLimitError,
+  TermiiAPIError,
+  TermiiNetworkError,
+} from '../src';
 import {
   apiKey,
   baseUrl,

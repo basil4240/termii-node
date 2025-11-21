@@ -1,4 +1,4 @@
-import { TermiiValidationError } from "./errors";
+import { TermiiValidationError } from './errors';
 
 export class Validator {
   /**
@@ -10,7 +10,6 @@ export class Validator {
     }
 
     // Remove spaces and special characters
-    // eslint-disable-next-line no-useless-escape
     const cleaned = phoneNumber.replace(/[\s\-\(\)]/g, '');
 
     // Must be digits only and start with country code
@@ -22,9 +21,7 @@ export class Validator {
 
     // Check length (minimum 10 digits, maximum 15)
     if (cleaned.length < 10 || cleaned.length > 15) {
-      throw new TermiiValidationError(
-        'Phone number must be between 10 and 15 digits'
-      );
+      throw new TermiiValidationError('Phone number must be between 10 and 15 digits');
     }
   }
 
@@ -37,16 +34,12 @@ export class Validator {
     }
 
     if (senderId.length < 3 || senderId.length > 11) {
-      throw new TermiiValidationError(
-        'Sender ID must be between 3 and 11 characters'
-      );
+      throw new TermiiValidationError('Sender ID must be between 3 and 11 characters');
     }
 
     // Only alphanumeric characters allowed
     if (!/^[a-zA-Z0-9]+$/.test(senderId)) {
-      throw new TermiiValidationError(
-        'Sender ID must contain only alphanumeric characters'
-      );
+      throw new TermiiValidationError('Sender ID must contain only alphanumeric characters');
     }
   }
 
@@ -63,9 +56,7 @@ export class Validator {
     }
 
     if (missing.length > 0) {
-      throw new TermiiValidationError(
-        `Missing required fields: ${missing.join(', ')}`
-      );
+      throw new TermiiValidationError(`Missing required fields: ${missing.join(', ')}`);
     }
   }
 
@@ -114,6 +105,4 @@ export class Validator {
       }
     });
   }
-
-  
 }

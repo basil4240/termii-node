@@ -1,8 +1,4 @@
-import {
-  SendTemplateRequest,
-  SendTemplateResponse,
-  SendTemplateWithMediaRequest,
-} from '../types';
+import { SendTemplateRequest, SendTemplateResponse, SendTemplateWithMediaRequest } from '../types';
 import { TermiiValidationError } from '../utils';
 import { Validator } from '../utils';
 import { BaseResource } from './base.resource';

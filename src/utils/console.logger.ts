@@ -1,4 +1,4 @@
-import { Logger } from "../types";
+import { Logger } from '../types';
 
 export class ConsoleLogger implements Logger {
   debug(message: string, ...args: any[]) {

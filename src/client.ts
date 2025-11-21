@@ -65,7 +65,6 @@ export class TermiiClient {
     this.config.logger?.info('Termii client initialized', {
       baseUrl: this.config.baseUrl,
     });
-    
   }
 
   /**

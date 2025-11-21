@@ -1,4 +1,4 @@
-import { NumberMessageType } from "../constants";
+import { MessageType } from '../constants';
 
 export interface SendNumberMessageRequest {
   /** Destination phone number in international format (e.g., 2347065250817) */
@@ -11,7 +11,7 @@ export interface SendNumberMessageRequest {
   api_key?: string;
 
   /** Message type (optional, default 'plain') */
-  type?: NumberMessageType;
+  type?: MessageType;
 }
 
 export interface SendNumberMessageResponse {

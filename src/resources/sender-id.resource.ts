@@ -1,9 +1,5 @@
 import { SENDER_ID_STATUS, SenderIdStatus } from '../constants';
-import {
-  FetchSenderIdResponse,
-  RequestSenderIdRequest,
-  RequestSenderIdResponse,
-} from '../types';
+import { FetchSenderIdResponse, RequestSenderIdRequest, RequestSenderIdResponse } from '../types';
 import { TermiiValidationError } from '../utils';
 import { Validator } from '../utils';
 import { BaseResource } from './base.resource';
@@ -63,7 +59,7 @@ export class SenderIdResource extends BaseResource {
     // Validate required fields
     Validator.validateRequired({
       sender_id: params.sender_id,
-      'useCase': params.useCase,
+      useCase: params.useCase,
       company: params.company,
     });
 

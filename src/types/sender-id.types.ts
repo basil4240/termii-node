@@ -1,5 +1,5 @@
-import { SenderIdStatus } from "../constants";
-import { Pageable, SortInfo } from "./common.types";
+import { SenderIdStatus } from '../constants';
+import { Pageable, SortInfo } from './common.types';
 
 /** A Sender ID entry (in fetch list) */
 export interface SenderIdEntry {
@@ -65,7 +65,7 @@ export interface RequestSenderIdRequest {
   sender_id: string;
 
   /** A sample of the type of message you'll send using this sender ID */
-  'useCase': string;
+  useCase: string;
 
   /** The name of the company associated with this sender ID */
   company: string;

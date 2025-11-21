@@ -120,12 +120,7 @@ export interface FetchCampaignHistoryResponse extends CampaignHistory {
   /* same as single history item */
 }
 
-export interface RetryCampaignRequest {
-  /** API key (will be injected) */
-  api_key?: string;
-
-  /** (Optional) any body params? The docs only show api_key for retry */
-}
+export type RetryCampaignRequest = {};
 
 export interface RetryCampaignResponse {
   message: string;

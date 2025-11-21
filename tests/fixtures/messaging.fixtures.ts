@@ -12,7 +12,7 @@ export const mockBulkMessageResponse: SendBulkMessageResponse = {
   message: 'Successfully Sent',
   balance: 8.5,
   user: 'test_user',
-  code: ''
+  code: '',
 };
 
 export const mockErrorResponse = {

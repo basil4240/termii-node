@@ -23,7 +23,7 @@ const termii = new TermiiClient({
 async function fetchContact() {
   try {
     const result = await termii.contact.fetch('691dfb5d36e83f18898bd72e');
-    
+
     console.log('Contact Fetched:', result);
   } catch (error) {
     console.error('Error Fetching contact');

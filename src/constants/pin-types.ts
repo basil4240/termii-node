@@ -3,4 +3,4 @@ export const PIN_TYPES = {
   ALPHANUMERIC: 'alphanumeric',
 } as const;
 
-export type PinType = typeof PIN_TYPES[keyof typeof PIN_TYPES];
+export type PinType = (typeof PIN_TYPES)[keyof typeof PIN_TYPES];

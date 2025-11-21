@@ -1,7 +1,11 @@
 import MockAdapter from 'axios-mock-adapter';
 import { MessagingResource } from '../../../src/resources/messaging.resource';
 import { TermiiValidationError } from '../../../src/utils/errors';
-import { createTestHTTPClient, resetTestClient, restoreTestClient } from '../../helpers/test-client';
+import {
+  createTestHTTPClient,
+  resetTestClient,
+  restoreTestClient,
+} from '../../helpers/test-client';
 import {
   mockSendMessageResponse,
   mockBulkMessageResponse,
@@ -20,10 +24,10 @@ describe('MessagingResource', () => {
     // Create test HTTP client with mocked axios
     const testSetup = createTestHTTPClient();
     mockAxios = testSetup.mockAxios;
-    
+
     // Create messaging resource with the mocked HTTP client (no logger in tests)
     messagingResource = new MessagingResource(testSetup.httpClient, apiKey, undefined);
-    
+
     // Inject API key (mimicking what TermiiClient does)
     (messagingResource as any).apiKey = apiKey;
   });
@@ -52,7 +56,7 @@ describe('MessagingResource', () => {
       expect(result).toEqual(mockSendMessageResponse);
       expect(mockAxios.history.post.length).toBe(1);
       expect(mockAxios.history.post[0].url).toBe(endpoint);
-      
+
       const requestData = JSON.parse(mockAxios.history.post[0].data);
       expect(requestData).toMatchObject({
         ...validSendMessageParams,
@@ -128,9 +132,7 @@ describe('MessagingResource', () => {
 
       // Act & Assert
       await expect(messagingResource.send(invalidParams)).rejects.toThrow(TermiiValidationError);
-      await expect(messagingResource.send(invalidParams)).rejects.toThrow(
-        /Maximum 100 recipients/
-      );
+      await expect(messagingResource.send(invalidParams)).rejects.toThrow(/Maximum 100 recipients/);
     });
 
     it('should throw validation error for empty recipient array', async () => {
@@ -223,7 +225,7 @@ describe('MessagingResource', () => {
       expect(result).toEqual(mockBulkMessageResponse);
       expect(mockAxios.history.post.length).toBe(1);
       expect(mockAxios.history.post[0].url).toBe(endpoint);
-      
+
       const requestData = JSON.parse(mockAxios.history.post[0].data);
       expect(requestData).toMatchObject({
         ...validBulkMessageParams,
@@ -351,9 +353,9 @@ describe('MessagingResource', () => {
 
     it('should throw validation error for missing media URL', async () => {
       // Arrange
-      const invalidParams = { 
-        ...validMediaMessageParams, 
-        media: { url: '', caption: 'Test' } 
+      const invalidParams = {
+        ...validMediaMessageParams,
+        media: { url: '', caption: 'Test' },
       };
 
       // Act & Assert

@@ -1,8 +1,8 @@
-import { MESSAGE_TYPES } from "../constants";
-import { SendNumberMessageRequest, SendNumberMessageResponse } from "../types";
-import { TermiiValidationError } from "../utils";
-import { Validator } from "../utils";
-import { BaseResource } from "./base.resource";
+import { MESSAGE_TYPES } from '../constants';
+import { SendNumberMessageRequest, SendNumberMessageResponse } from '../types';
+import { TermiiValidationError } from '../utils';
+import { Validator } from '../utils';
+import { BaseResource } from './base.resource';
 
 export class NumberResource extends BaseResource {
   private readonly SEND_NUMBER_ENDPOINT = '/api/sms/number/send';
@@ -17,7 +17,9 @@ export class NumberResource extends BaseResource {
    *   type: 'plain',
    * });
    */
-  async send(params: Omit<SendNumberMessageRequest, 'api_key'>): Promise<SendNumberMessageResponse> {
+  async send(
+    params: Omit<SendNumberMessageRequest, 'api_key'>
+  ): Promise<SendNumberMessageResponse> {
     this.debug('Sending number message', params);
 
     // Validate required fields
@@ -43,7 +45,10 @@ export class NumberResource extends BaseResource {
     };
 
     // Send request
-    const response = await this.http.post<SendNumberMessageResponse>(this.SEND_NUMBER_ENDPOINT, payload);
+    const response = await this.http.post<SendNumberMessageResponse>(
+      this.SEND_NUMBER_ENDPOINT,
+      payload
+    );
 
     this.info('Number message sent successfully', {
       message_id: response.data.message_id,

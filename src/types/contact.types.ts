@@ -1,5 +1,5 @@
-import { ReadStream } from "fs";
-import { Pageable } from "./common.types";
+import { ReadStream } from 'fs';
+import { Pageable } from './common.types';
 
 export interface ContactKeyValue {
   key: string;

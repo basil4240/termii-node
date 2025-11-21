@@ -17,13 +17,13 @@ export function createTestHTTPClient(
 ): TestClientSetup {
   // Create axios instance
   const axiosInstance = axios.create({ baseURL });
-  
+
   // Create mock adapter for the axios instance
   const mockAxios = new MockAdapter(axiosInstance);
 
   // Create HTTPClient
   const httpClient = new HTTPClient(baseURL, 30000, 3, undefined);
-  
+
   // Replace the internal client with our mocked one
   (httpClient as any).client = axiosInstance;
 
